@@ -17,7 +17,7 @@ public class WorkoutKeeper {
 	 */
 	public static void main(String[] args) {
 		String email = "";
-
+		System.out.println("Change");
 		email = welcomeScreen();
 		System.out.println(email);
 
