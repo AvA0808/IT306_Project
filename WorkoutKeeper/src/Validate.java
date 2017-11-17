@@ -8,13 +8,14 @@
  */
 public class Validate {
 
-	public static boolean validateEmail(String email) {
-		// TODO Auto-generated method stub
+	public static boolean isEmailInList(String email) {
+		// Check to see if the email provided is in the text file
 		return true;
 	}
 
-	public static boolean validatePassword(String password) {
-		// TODO Auto-generated method stub
+	public static boolean doesPasswordMatch(String email, String password) {
+		// Check to see if the password provided matches the email it is being
+		// provided with.
 		return true;
 	}
 }
