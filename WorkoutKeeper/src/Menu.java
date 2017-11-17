@@ -3,14 +3,15 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * 
- */
-
-/**
  * @author Aleksandar
  *
  */
 public class Menu {
+	/**
+	 * 
+	 * @param email
+	 * @return
+	 */
 	static String welcomeScreen(String email) {
 		String[] options = { "Create Account", "Login", "Exit" };
 
@@ -31,15 +32,19 @@ public class Menu {
 		return email;
 	}
 
+	/**
+	 * 
+	 */
 	private static void createAcount() {
 		JTextField email = new JTextField();
 		JTextField password = new JTextField();
 		JTextField firstName = new JTextField();
 		JTextField lastName = new JTextField();
 
+		boolean validInput;
+
 		Object[] inputFields = { "Email:", email, "Password:", password, "First Name:", firstName, "Last Name:",
 				lastName };
-		boolean validInput;
 
 		do {
 			int option = JOptionPane.showConfirmDialog(null, inputFields, "Create Account",
@@ -63,6 +68,10 @@ public class Menu {
 		} while (!validInput);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public static String login() {
 		JTextField email = new JTextField();
 		JTextField password = new JPasswordField();
@@ -77,7 +86,7 @@ public class Menu {
 
 			if (option == JOptionPane.OK_OPTION) {
 				if (Validate.isEmailInList(email.getText())) {
-					if (Validate.doesPasswordMatch(password.getText())) {
+					if (Validate.doesPasswordMatch(email.getText(), password.getText())) {
 						accessGranted = true;
 						setEmail = email.getText();
 					} else {
