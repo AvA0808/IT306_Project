@@ -1,3 +1,4 @@
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -119,7 +120,7 @@ public class Menu {
 		return userEmail;
 	}
 
-	public static void loggedIn() {
+	public static void loggedIn(String email) {
 		String[] options = { "Exercise", "My Workouts", "Shared Workouts", "My Profile", "Logout" };
 		boolean exit = false;
 
@@ -127,13 +128,13 @@ public class Menu {
 			switch (JOptionPane.showOptionDialog(null, "User Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				exerciseSubMenu();
+				exerciseSubMenu(email);
 				break;
-			case 1:
+			case 1:// TODO Auto-generated method stub
 				break;
-			case 2:
+			case 2:// TODO Auto-generated method stub
 				break;
-			case 3:
+			case 3:// TODO Auto-generated method stub
 				break;
 			case 4:
 				exit = true;
@@ -146,7 +147,7 @@ public class Menu {
 		} while (!exit);
 	}
 
-	private static void exerciseSubMenu() {
+	private static void exerciseSubMenu(String email) {
 		String[] options = { "Create New Exercise", "Sort Exercise", "Search Cardio\nExercise", "Cancel" };
 		boolean exit = false;
 
@@ -154,11 +155,11 @@ public class Menu {
 			switch (JOptionPane.showOptionDialog(null, "Exercise Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				createExercise();
+				createExercise(email);
 				break;
-			case 1:
+			case 1:// TODO Auto-generated method stub
 				break;
-			case 2:
+			case 2:// TODO Auto-generated method stub
 				break;
 			case 3:
 				exit = true;
@@ -171,8 +172,48 @@ public class Menu {
 		} while (!exit);
 	}
 
-	private static void createExercise() {
+	private static void createExercise(String email) {
 		// TODO Auto-generated method stub
+		boolean exit = false;
+		int userMuscle, userType = -1;
+		String userDesc;
+		Exercise newExercise;
 
+		JTextField description = new JTextField();
+		JComboBox muscle = new JComboBox(Exercise.MUSCLE_GROUP);
+		JComboBox type = new JComboBox(Exercise.EXERCISE_TYPE);
+		Object[] inputFields = { "Description:", description, "Muscle Group", muscle, "Exercise Type", type };
+
+		do {
+			int option = JOptionPane.showConfirmDialog(null, inputFields, "Create New Exercise",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+			if (option == JOptionPane.OK_OPTION) {
+				if (newExercise.setDescription(description.getText())) {
+					userDesc = description.getText();
+					userMuscle = muscle.getSelectedIndex();
+					userType = type.getSelectedIndex();
+					exit = true;
+				} else {
+					JOptionPane.showMessageDialog(null, "The Description of the Exercise cannot be empty.\nTry Again.");
+				}
+			} else {
+				exit = true;
+			}
+
+		} while (!exit);
+
+		switch (userType) {
+		case 0:
+			newExercise = new Stretch();
+
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		default:
+			JOptionPane.showMessageDialog(null, "There was an error. The exercise could not be added.\nTry again.");
+		}
 	}
 }

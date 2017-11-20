@@ -2,12 +2,21 @@
 
 public class Stretch extends Exercise {
 	private String instructions;
-	
-	/* 
+
+	/*
 	 * constructor that sets the ID and increments the exercise counter
-	 * */
+	 */
 	public Stretch() {
 		super();
+	}
+
+	public Stretch(String description, String muscle) {
+		super(description, muscle);
+	}
+
+	public Stretch(String description, String muscle, String instructions) {
+		this(description, muscle);
+		this.instructions = instructions;
 	}
 
 	/**
@@ -18,20 +27,21 @@ public class Stretch extends Exercise {
 	}
 
 	/**
-	 * @param instructions the instructions to set
+	 * @param instructions
+	 *            the instructions to set
 	 */
 	public boolean setInstructions(String instructions) {
-		if(instructions.equals("")) {
+		if (instructions.equals("")) {
 			return false;
-		}
-		else {
+		} else {
 			this.instructions = instructions;
 			return true;
 		}
 	}
-	
+
 	/* Prepares a record of the stretch exercise's information and returns it */
 	public String toString() {
-		return("Type: " + this.getClass().getName() + ", " + super.toString() + ", Instructions: " + this.instructions);
+		return ("Type: " + this.getClass().getName() + ", " + super.toString() + ", Instructions: "
+				+ this.instructions);
 	}
 }

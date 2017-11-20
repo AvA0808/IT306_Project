@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -7,8 +9,9 @@ import javax.swing.JOptionPane;
 public class WorkoutKeeper {
 	/**
 	 * @param args
+	 * @throws FileNotFoundException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		String path = "./src/";
 		String userFile = "user.txt";
 		String workoutFile = "workout.txt";
@@ -18,11 +21,14 @@ public class WorkoutKeeper {
 
 		String email = "";
 
+		// String checkPath = path + userFile;
+		// checkPath = FileSys.readLine(checkPath);
+		// System.out.println(FileSys.getSubString(checkPath, "fIrsT nAme"));
 		if (FileSys.fileSetup(path, files)) {
 			do {
 				email = Menu.welcomeScreen(email);
 				if (email != "-1") {
-					Menu.loggedIn();
+					Menu.loggedIn(email);
 				}
 			} while (email == "-1");
 		} else {
