@@ -76,7 +76,6 @@ public class FileSys {
 
 		if (findValue.indexOf(",") == -1) {
 			findValue = findValue.substring(0, findValue.length());
-
 		} else {
 			findValue = findValue.substring(0, findValue.indexOf(","));
 		}
