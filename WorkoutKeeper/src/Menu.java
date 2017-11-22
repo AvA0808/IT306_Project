@@ -1,3 +1,7 @@
+import java.awt.HeadlessException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
@@ -11,33 +15,37 @@ public class Menu {
 	 * 
 	 * @param email
 	 * @return
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 */
-	static String welcomeScreen(String email) {
+	static String welcomeScreen(String email) throws FileNotFoundException, IOException {
 		String[] options = { "Create Account", "Login", "Exit" };
 
 		switch (JOptionPane.showOptionDialog(null, "Welcome to the Workout Keeper App", "Workout Keeper",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 		case 0:
 			createAcount();
-			email = "-1";
+			email = "error";
 			break;
 		case 1:
 			email = login();
 			break;
 		case 2:
-			email = "0";
+			email = "exit";
 			break;
 		default:
-			email = "-1";
+			email = "error";
 			break;
 		}
 		return email;
 	}
 
 	/**
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 * 
 	 */
-	private static void createAcount() {
+	private static void createAcount() throws FileNotFoundException, IOException {
 		JTextField email = new JTextField();
 		JTextField password = new JTextField();
 		JTextField firstName = new JTextField();
@@ -60,7 +68,7 @@ public class Menu {
 						if (user.setFirstName(firstName.getText())) {
 							if (user.setLastName(lastName.getText())) {
 								validInput = true;
-								FileSys.append("./src/", "user.txt", user.toString());
+								FileSys.append(FileSys.PATH, FileSys.USER_FILE, user.toString());
 							} else {
 								JOptionPane.showMessageDialog(null, "The Last Name entered is not valid.\nTry again.");
 							}
@@ -84,7 +92,7 @@ public class Menu {
 	 * 
 	 * @return
 	 */
-	public static String login() {
+	public static String login() throws HeadlessException, FileNotFoundException {
 		JTextField email = new JTextField();
 		JTextField password = new JPasswordField();
 		boolean accessGranted = false;
@@ -112,14 +120,14 @@ public class Menu {
 				}
 			} else {
 				accessGranted = true;
-				userEmail = "-1";
+				userEmail = "error";
 			}
 
 		} while (!accessGranted);
 		return userEmail;
 	}
 
-	public static void loggedIn(String email) {
+	public static String loggedIn(String email) {
 		String[] options = { "Exercise", "My Workouts", "Shared Workouts", "My Profile", "Logout" };
 		boolean exit = false;
 
@@ -137,6 +145,7 @@ public class Menu {
 				break;
 			case 4:
 				exit = true;
+				email = "error";
 				break;
 			default:
 				exit = true;
@@ -144,6 +153,8 @@ public class Menu {
 				break;
 			}
 		} while (!exit);
+
+		return email;
 	}
 
 	private static void exerciseSubMenu(String email) {
@@ -196,6 +207,7 @@ public class Menu {
 				}
 			} else {
 				exit = true;
+				userType = 3;
 			}
 
 		} while (!exit);
@@ -210,8 +222,11 @@ public class Menu {
 		case 2:
 			createWeightTraining(userDesc, userMuscle);
 			break;
+		case 3:
+			JOptionPane.showMessageDialog(null, "Returning to Exercise Menu.");
+			break;
 		default:
-			JOptionPane.showMessageDialog(null, "There was an error. The exercise could not be added.\nTry again.");
+			JOptionPane.showMessageDialog(null, "Unexpected Error.");
 		}
 	}
 

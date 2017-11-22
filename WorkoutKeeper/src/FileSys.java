@@ -18,12 +18,15 @@ public class FileSys {
 	final static String WORKOUT_FILE = "workout.txt";
 	final static String EXERCISE_FILE = "exercise.txt";
 	final static String SHARED_FILE = "shared.txt";
-	final static String[] FILES = { "user.txt", "workout.txt", "exercise.txt", "shared.txt" };
+	final static String EXERCISE_ID = "exerciseID.txt";
+	final static String WORKOUT_ID = "workoutID.txt";
+	final static String[] FILES = { "user.txt", "workout.txt", "exercise.txt", "shared.txt", "exerciseID.txt",
+			"workoutID.txt" };
 
-	public static boolean fileSetup(String path, String[] files) throws IOException {
+	public static boolean fileSetup() throws IOException {
 		String fileName;
-		for (String name : files) {
-			fileName = path + name;
+		for (String name : FILES) {
+			fileName = PATH + name;
 			File file = new File(fileName);
 			try {
 				file.createNewFile();
@@ -52,7 +55,7 @@ public class FileSys {
 		return false;
 	}
 
-	public static String readLine(String filePath) throws FileNotFoundException {
+	public static String readLine(String filePath) {
 		Scanner inputStream;
 		String readLine = "";
 		try {
@@ -71,16 +74,20 @@ public class FileSys {
 		String tempReadLine = readLine.toLowerCase();
 		String tempSearchValue = searchValue.toLowerCase();
 
-		findValue = readLine.substring(tempReadLine.indexOf(tempSearchValue), readLine.length());
+		if (tempReadLine.contains(tempSearchValue)) {
+			findValue = readLine.substring(tempReadLine.indexOf(tempSearchValue), readLine.length());
 
-		if (findValue.indexOf(",") == -1) {
-			findValue = findValue.substring(0, findValue.length());
+			if (findValue.indexOf(",") == -1) {
+				findValue = findValue.substring(0, findValue.length());
+			} else {
+				findValue = findValue.substring(0, findValue.indexOf(","));
+			}
+
+			findValue = findValue.substring(findValue.indexOf(':') + 1, findValue.length());
+			return findValue.trim();
 		} else {
-			findValue = findValue.substring(0, findValue.indexOf(","));
+			return null;
 		}
 
-		findValue = findValue.substring(findValue.indexOf(':') + 1, findValue.length());
-
-		return findValue.trim();
 	}
 }

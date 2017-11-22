@@ -18,19 +18,16 @@ public class WorkoutKeeper {
 		String email = "";
 
 		// String checkPath = FileSys.PATH + FileSys.USER_FILE;
-		// while(exit?){
-		// String fileLine = Get next line FileSys.readLine(checkPath);
-		//
-		// if user email matches FileSys.getSubString(fileLine, "Email: ");
-		// }
+		// String fileLine = FileSys.readLine(checkPath);
+		// System.out.println(FileSys.getSubString(fileLine, "Email: "));
 
-		if (FileSys.fileSetup(FileSys.PATH, FileSys.FILES)) {
+		if (FileSys.fileSetup()) {
 			do {
 				email = Menu.welcomeScreen(email);
-				if (email != "-1") {
-					Menu.loggedIn(email);
+				if (email != "error" && email != "exit") {
+					email = Menu.loggedIn(email);
 				}
-			} while (email == "-1");
+			} while (email == "error");
 		} else {
 			JOptionPane.showMessageDialog(null, "The system could not be opened.\nContact the admin for assistance.");
 		}

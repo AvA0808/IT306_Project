@@ -2,7 +2,8 @@
 
 public abstract class Exercise {
 	// system-generated ID to track the number of exercises across all users
-	private static int exerciseID = 0;
+	// private static int exerciseID = 0;
+
 	// the exercise's own unique ID
 	private int ID;
 	private String description;
@@ -15,8 +16,8 @@ public abstract class Exercise {
 
 	/* constructor assigns the newest ID and increments the exercise counter */
 	public Exercise() {
-		this.ID = exerciseID;
-		exerciseID++;
+		// this.ID = exerciseID;
+		// exerciseID++;
 	}
 
 	public Exercise(String description, String muscle) {
@@ -25,9 +26,9 @@ public abstract class Exercise {
 		this.muscle = muscle;
 	}
 
-	public int getExerciseID() {
-		return exerciseID;
-	}
+	// public int getExerciseID() {
+	// return exerciseID;
+	// }
 
 	/**
 	 * @return the iD
