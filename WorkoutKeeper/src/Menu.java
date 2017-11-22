@@ -4,8 +4,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * @author Aleksandar
- *
+ * @author Aleksandar new Line
  */
 public class Menu {
 	/**
