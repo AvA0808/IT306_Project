@@ -173,11 +173,9 @@ public class Menu {
 	}
 
 	private static void createExercise(String email) {
-		// TODO Auto-generated method stub
 		boolean exit = false;
-		int userMuscle, userType = -1;
-		String userDesc;
-		Exercise newExercise;
+		int userType = -1;
+		String userDesc = "", userMuscle = "";
 
 		JTextField description = new JTextField();
 		JComboBox muscle = new JComboBox(Exercise.MUSCLE_GROUP);
@@ -189,9 +187,9 @@ public class Menu {
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 			if (option == JOptionPane.OK_OPTION) {
-				if (newExercise.setDescription(description.getText())) {
+				if (description.getText() != null) {
 					userDesc = description.getText();
-					userMuscle = muscle.getSelectedIndex();
+					userMuscle = Exercise.MUSCLE_GROUP[muscle.getSelectedIndex()];
 					userType = type.getSelectedIndex();
 					exit = true;
 				} else {
@@ -205,15 +203,47 @@ public class Menu {
 
 		switch (userType) {
 		case 0:
-			newExercise = new Stretch();
-
+			createStretch(userDesc, userMuscle);
 			break;
 		case 1:
+			createCardio(userDesc, userMuscle);
 			break;
 		case 2:
+			createWeightTraining(userDesc, userMuscle);
 			break;
 		default:
 			JOptionPane.showMessageDialog(null, "There was an error. The exercise could not be added.\nTry again.");
 		}
+	}
+
+	private static void createStretch(String userDesc, String userMuscle) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private static void createCardio(String userDesc, String userMuscle) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private static void createWeightTraining(String userDesc, String userMuscle) {
+		// TODO Auto-generated method stub
+		boolean exit = false;
+
+		JTextField weight = new JTextField();
+		JTextField reps = new JTextField();
+		Object[] inputFields = { "Enter Weight (lbs) ", weight, "Enter Number of Reps", reps };
+
+		do {
+			int option = JOptionPane.showConfirmDialog(null, inputFields, "Create Weight Training Exercise",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+			if (option == JOptionPane.OK_OPTION) {
+
+			} else {
+				exit = true;
+			}
+
+		} while (!exit);
 	}
 }

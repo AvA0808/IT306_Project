@@ -1,4 +1,5 @@
-import java.io.FileNotFoundException;
+import java.awt.HeadlessException;
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
@@ -9,22 +10,21 @@ import javax.swing.JOptionPane;
 public class WorkoutKeeper {
 	/**
 	 * @param args
-	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws HeadlessException
 	 */
-	public static void main(String[] args) throws FileNotFoundException {
-		String path = "./src/";
-		String userFile = "user.txt";
-		String workoutFile = "workout.txt";
-		String exerciseFile = "exercise.txt";
-		String sharedFile = "shared.txt";
-		String[] files = { "user.txt", "workout.txt", "exercise.txt", "shared.txt" };
+	public static void main(String[] args) throws HeadlessException, IOException {
 
 		String email = "";
 
-		// String checkPath = path + userFile;
-		// checkPath = FileSys.readLine(checkPath);
-		// System.out.println(FileSys.getSubString(checkPath, "fIrsT nAme"));
-		if (FileSys.fileSetup(path, files)) {
+		// String checkPath = FileSys.PATH + FileSys.USER_FILE;
+		// while(exit?){
+		// String fileLine = Get next line FileSys.readLine(checkPath);
+		//
+		// if user email matches FileSys.getSubString(fileLine, "Email: ");
+		// }
+
+		if (FileSys.fileSetup(FileSys.PATH, FileSys.FILES)) {
 			do {
 				email = Menu.welcomeScreen(email);
 				if (email != "-1") {

@@ -13,15 +13,14 @@ import javax.swing.JOptionPane;
  *
  */
 public class FileSys {
-	// private static String path = "./src/";
-	// private static String userFile = "user.txt";
-	// private static String workoutFile = "workout.txt";
-	// private static String exerciseFile = "exercise.txt";
-	// private static String sharedFile = "shared.txt";
-	// private static String[] files = { "user.txt", "workout.txt",
-	// "exercise.txt", "shared.txt" };
+	final static String PATH = "./src/";
+	final static String USER_FILE = "user.txt";
+	final static String WORKOUT_FILE = "workout.txt";
+	final static String EXERCISE_FILE = "exercise.txt";
+	final static String SHARED_FILE = "shared.txt";
+	final static String[] FILES = { "user.txt", "workout.txt", "exercise.txt", "shared.txt" };
 
-	public static boolean fileSetup(String path, String[] files) {
+	public static boolean fileSetup(String path, String[] files) throws IOException {
 		String fileName;
 		for (String name : files) {
 			fileName = path + name;
@@ -36,7 +35,7 @@ public class FileSys {
 		return true;
 	}
 
-	public static boolean append(String path, String file, String newLine) {
+	public static boolean append(String path, String file, String newLine) throws FileNotFoundException, IOException {
 		PrintWriter pw = null;
 		try {
 			path += file;

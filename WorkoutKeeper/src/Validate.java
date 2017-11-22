@@ -4,7 +4,7 @@
  */
 public class Validate {
 
-	public static boolean isEmailInList(String email) {
+	public static boolean isEmailInList(String loginEmail) {
 		// Check to see if the email provided is in the text file
 
 		/*
@@ -16,7 +16,7 @@ public class Validate {
 		return true;
 	}
 
-	public static boolean doesPasswordMatch(String email, String password) {
+	public static boolean doesPasswordMatch(String userEmail, String loginPassword) {
 		// Check to see if the password provided matches the email it is being
 		// provided with.
 
