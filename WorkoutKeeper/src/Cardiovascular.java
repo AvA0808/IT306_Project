@@ -38,9 +38,9 @@ public class Cardiovascular extends Exercise {
 	 * @return boolean true indicating that the duration was successfully set
 	 * @throws IllegalArgumentException
 	 */
-	public boolean setDuration(int duration) throws IllegalArgumentException {
+	public boolean setDuration(int duration) {
 		if (duration <= 0) {
-			throw new IllegalArgumentException("Error: not a valid time in minutes!");
+			return false;
 		} else {
 			this.duration = duration;
 			return true;
@@ -63,7 +63,7 @@ public class Cardiovascular extends Exercise {
 	 *         not
 	 */
 	public boolean setSetting(String setting) {
-		if (setting.equals("")) {
+		if (setting.isEmpty()) {
 			return false;
 		} else {
 			this.setting = setting;

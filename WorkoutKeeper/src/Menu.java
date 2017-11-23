@@ -68,7 +68,7 @@ public class Menu {
 						if (user.setFirstName(firstName.getText())) {
 							if (user.setLastName(lastName.getText())) {
 								validInput = true;
-								FileSys.append(FileSys.PATH, FileSys.USER_FILE, user.toString());
+								FileSys.append(FileSys.USER_FILE, user.toString());
 							} else {
 								JOptionPane.showMessageDialog(null, "The Last Name entered is not valid.\nTry again.");
 							}
@@ -77,7 +77,7 @@ public class Menu {
 						}
 					} else {
 						JOptionPane.showMessageDialog(null,
-								"The Password entered is not valid.\nIt must contain at least 8 characters, at least 1 upper case and 1 lower case, and at least 4 numbers\nTry again.");
+								"The Password entered is not valid.\nIt must contain at least 9 characters, at least 1 upper case and 1 lower case, and at least 4 numbers\nTry again.");
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "The Email entered is not a valid email.\nTry again.");
@@ -99,7 +99,7 @@ public class Menu {
 		String userEmail = "";
 
 		Object[] inputFields = { "Email:", email,
-				"Password: (Minimum 8 char, 1 Upper Case and 1 lower case, and at least 4 numbers)", password };
+				"Password: (Minimum 9 char, 1 Upper Case and 1 lower case, and at least 4 numbers)", password };
 
 		do {
 			int option = JOptionPane.showConfirmDialog(null, inputFields, "Workout Keeper Login",
@@ -245,7 +245,7 @@ public class Menu {
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 			if (option == JOptionPane.OK_OPTION) {
-				if (description.getText() != null) {
+				if (!description.getText().isEmpty()) {
 					userDesc = description.getText();
 					userMuscle = Exercise.MUSCLE_GROUP[muscle.getSelectedIndex()];
 					userType = type.getSelectedIndex();
@@ -257,18 +257,17 @@ public class Menu {
 				exit = true;
 				userType = 3;
 			}
-
 		} while (!exit);
 
 		switch (userType) {
 		case 0:
-			createStretch(userDesc, userMuscle);
+			createStretch(email, userDesc, userMuscle);
 			break;
 		case 1:
-			createCardio(userDesc, userMuscle);
+			createCardio(email, userDesc, userMuscle);
 			break;
 		case 2:
-			createWeightTraining(userDesc, userMuscle);
+			createWeightTraining(email, userDesc, userMuscle);
 			break;
 		case 3:
 			JOptionPane.showMessageDialog(null, "Returning to Exercise Menu.");
@@ -278,17 +277,82 @@ public class Menu {
 		}
 	}
 
-	private static void createStretch(String userDesc, String userMuscle) {
-		// TODO Auto-generated method stub
+	private static void createStretch(String email, String userDesc, String userMuscle) {
+		boolean exit = false;
+		String userInstructions = "";
+		JTextField instructions = new JTextField();
+		Object[] inputFields = { "Instructions:", instructions };
+		Stretch newExercise = new Stretch(userDesc, userMuscle, userInstructions);
+		
+		do {
+			int option = JOptionPane.showConfirmDialog(null, inputFields, "Create Stretch Exercise",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
+			if (option == JOptionPane.OK_OPTION) {
+				//TODO change to use the .set method
+				if (!instructions.getText().isEmpty()) {
+					userInstructions = instructions.getText();
+					exit = true;
+					try {
+						FileSys.append(FileSys.EXERCISE_FILE, "Email: " + email + ", " + newExercise.toString());
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "The Instructions of the Exercise cannot be empty.\nTry Again.");
+				}
+			} else {
+				exit = true;
+			}
+		} while (!exit);
+		
+		
 	}
 
-	private static void createCardio(String userDesc, String userMuscle) {
-		// TODO Auto-generated method stub
+	private static void createCardio(String email, String userDesc, String userMuscle) throws IllegalArgumentException{
+		boolean exit = false;
+		
+		Cardiovascular newExercise = new Cardiovascular(userDesc, userMuscle);
+		
+		JTextField duration = new JTextField();
+		JTextField setting = new JTextField();
+		Object[] inputFields = { "Duration:", duration, "Setting:", setting };
+		
+		do {
+			int option = JOptionPane.showConfirmDialog(null, inputFields, "Create Cardiovascular Exercise",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
+			if (option == JOptionPane.OK_OPTION) {
+				if (!duration.getText().isEmpty() && duration.getText().chars().allMatch( Character::isDigit ) && newExercise.setDuration(Integer.parseInt(duration.getText()))) {
+					if(!duration.getText().isEmpty() && newExercise.setSetting(duration.getText())) {
+						exit = true;
+						try {
+							FileSys.append(FileSys.EXERCISE_FILE, "Email: " + email + ", " + newExercise.toString());
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "The Setting of the Exercise cannot be empty.\nTry Again.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "The Duration of the Exercise must be a number greater than 0.\nTry Again.");
+				}
+			} else {
+				exit = true;
+			}
+		} while (!exit);
+		
+		
+		
+		 
 	}
 
-	private static void createWeightTraining(String userDesc, String userMuscle) {
+	private static void createWeightTraining(String email, String userDesc, String userMuscle) {
 		// TODO Auto-generated method stub
 		boolean exit = false;
 

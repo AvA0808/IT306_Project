@@ -35,13 +35,15 @@ public class FileSys {
 				return false;
 			}
 		}
+		
+		
 		return true;
 	}
 
-	public static boolean append(String path, String file, String newLine) throws FileNotFoundException, IOException {
+	public static boolean append( String file, String newLine) throws FileNotFoundException, IOException {
 		PrintWriter pw = null;
-		try {
-			path += file;
+		String path = PATH + file;
+		try { 
 			pw = new PrintWriter(new FileOutputStream(new File(path), true));
 			pw.println(newLine);
 			return true;

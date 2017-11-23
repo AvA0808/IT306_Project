@@ -37,7 +37,7 @@ public class Validate {
 		catch (FileNotFoundException e) {
 			throw e;
 		}
-
+		scanner.close();
 		return flag;
 	}
 	
@@ -75,6 +75,7 @@ public class Validate {
 		catch (FileNotFoundException e) {
 			throw e;
 		}
+		scanner.close();
 		return flag;
 	}
 }
