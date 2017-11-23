@@ -9,6 +9,13 @@ public class User {
 	
 	//default constructor
 	public User() { }
+	
+	public User(String fn, String ln, String e, String p) {
+		this.firstName = fn;
+		this.lastName = ln;
+		this.email = e;
+		this.password = p;
+	}
 
 	/**
 	 * @return the firstName
