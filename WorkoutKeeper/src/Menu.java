@@ -127,22 +127,23 @@ public class Menu {
 		return userEmail;
 	}
 
-	public static String loggedIn(String email) {
+	public static String loggedIn(User user) {
 		String[] options = { "Exercise", "My Workouts", "Shared Workouts", "My Profile", "Logout" };
 		boolean exit = false;
+		String email = ""; //TEMPORARY REPLACEMENT FOR OLD PARAMETER CALLED EMAIL
 
 		do {
 			switch (JOptionPane.showOptionDialog(null, "User Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				exerciseSubMenu(email);
+				exerciseSubMenu(user.getEmail()); //CHANGE THIS TO USER OBJECT LATER
 				break;
 			case 1:// TODO Auto-generated method stub
 				break;
 			case 2:// TODO Auto-generated method stub
 				break;
-			case 3:// TODO Auto-generated method stub
-				break;
+			case 3:
+				profileSubMenu(user);
 			case 4:
 				exit = true;
 				email = "error";
@@ -180,6 +181,53 @@ public class Menu {
 				break;
 			}
 		} while (!exit);
+	}
+	
+	/*
+	 * Displays the profile sub-menu and processes user selections and inputs
+	 * @param
+	 * @return
+	 */
+	public static void profileSubMenu(User user) {
+		//instantiate the text field objects (not allowing new email)
+		JTextField new_password = new JTextField();
+		JTextField new_firstName = new JTextField();
+		JTextField new_lastName = new JTextField();
+
+		boolean validInput;
+		//instantiate what will be displayed in the dialog box
+		Object[] inputFields = { "*Leave text field(s) empty if no change desired", "Email: " + user.getEmail(), "Password:", new_password, "First Name: " + user.getFirstName(), new_firstName, "Last Name: " + user.getLastName(),
+				new_lastName };
+		//validate entries into text boxes
+		do {
+			int option = JOptionPane.showConfirmDialog(null, inputFields, "Update Profile",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			validInput = false;
+
+			if (option == JOptionPane.OK_OPTION) {
+				//if (user.setEmail(new_email.getText())) {
+					if (user.setPassword(new_password.getText()) || new_password.getText().equals("")) {
+						if (user.setFirstName(new_firstName.getText()) || new_firstName.getText().equals("")) {
+							if (user.setLastName(new_lastName.getText()) || new_lastName.getText().equals("")) {
+								validInput = true;
+								System.out.println("New record: " + user.getEmail() + ", " + user.getPassword() + ", " + user.getFirstName() + ", " + user.getLastName());
+							} else {
+								JOptionPane.showMessageDialog(null, "The Last Name entered is not valid.\nTry again.");
+							}
+						} else {
+							JOptionPane.showMessageDialog(null, "The First Name entered is not valid.\nTry again.");
+						}
+					} else {
+						JOptionPane.showMessageDialog(null,
+								"The Password entered is not valid.\nIt must contain at least 8 characters, at least 1 upper case and 1 lower case, and at least 4 numbers\nTry again.");
+					}
+				/*} else {
+					JOptionPane.showMessageDialog(null, "The Email entered is not a valid email.\nTry again.");
+				}*/
+			} else {
+				validInput = true;
+			}
+		} while (!validInput);
 	}
 
 	private static void createExercise(String email) {
