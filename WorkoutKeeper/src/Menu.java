@@ -13,31 +13,31 @@ import javax.swing.JTextField;
 public class Menu {
 	/**
 	 * 
-	 * @param email
+	 * @param status
 	 * @return
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	static String welcomeScreen(String email) throws FileNotFoundException, IOException {
+	static String welcomeScreen(String status, User user) throws FileNotFoundException, IOException {
 		String[] options = { "Create Account", "Login", "Exit" };
 
 		switch (JOptionPane.showOptionDialog(null, "Welcome to the Workout Keeper App", "Workout Keeper",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 		case 0:
 			createAcount();
-			email = "error";
+			status = "rePrompt";
 			break;
 		case 1:
-			email = login();
+			status = login(user, status);
 			break;
 		case 2:
-			email = "exit";
+			status = "exit";
 			break;
 		default:
-			email = "error";
+			status = "rePrompt";
 			break;
 		}
-		return email;
+		return status;
 	}
 
 	/**
@@ -92,11 +92,10 @@ public class Menu {
 	 * 
 	 * @return
 	 */
-	public static String login() throws HeadlessException, FileNotFoundException {
+	public static String login(User user, String status) throws HeadlessException, FileNotFoundException {
 		JTextField email = new JTextField();
 		JTextField password = new JPasswordField();
 		boolean accessGranted = false;
-		String userEmail = "";
 
 		Object[] inputFields = { "Email:", email,
 				"Password: (Minimum 9 char, 1 Upper Case and 1 lower case, and at least 4 numbers)", password };
@@ -109,7 +108,8 @@ public class Menu {
 				if (Validate.isEmailInList(email.getText())) {
 					if (Validate.doesPasswordMatch(email.getText(), password.getText())) {
 						accessGranted = true;
-						userEmail = email.getText();
+						createUser(user, email.getText());
+						status = "login";
 					} else {
 						JOptionPane.showMessageDialog(null, "The Password entered is not valid.\nTry again.");
 						accessGranted = false;
@@ -120,23 +120,27 @@ public class Menu {
 				}
 			} else {
 				accessGranted = true;
-				userEmail = "error";
+				status = "rePrompt";
 			}
 
 		} while (!accessGranted);
-		return userEmail;
+		return status;
 	}
 
-	public static String loggedIn(User user) {
+	private static void createUser(User user, String email) {
+		// TODO Auto-generated method stub
+		user.setEmail(email);
+	}
+
+	public static String loggedIn(User user, String status) {
 		String[] options = { "Exercise", "My Workouts", "Shared Workouts", "My Profile", "Logout" };
 		boolean exit = false;
-		String email = ""; //TEMPORARY REPLACEMENT FOR OLD PARAMETER CALLED EMAIL
-
+		System.out.println(user.getEmail());
 		do {
 			switch (JOptionPane.showOptionDialog(null, "User Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				exerciseSubMenu(user.getEmail()); //CHANGE THIS TO USER OBJECT LATER
+				exerciseSubMenu(user.getEmail());
 				break;
 			case 1:// TODO Auto-generated method stub
 				break;
@@ -146,7 +150,7 @@ public class Menu {
 				profileSubMenu(user);
 			case 4:
 				exit = true;
-				email = "error";
+				status = "rePrompt";
 				break;
 			default:
 				exit = true;
@@ -155,7 +159,7 @@ public class Menu {
 			}
 		} while (!exit);
 
-		return email;
+		return status;
 	}
 
 	private static void exerciseSubMenu(String email) {
@@ -243,7 +247,8 @@ public class Menu {
 		do {
 			int option = JOptionPane.showConfirmDialog(null, inputFields, "Create New Exercise",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-
+			
+			//TODO add a check to make sure the description provided is not already in their system
 			if (option == JOptionPane.OK_OPTION) {
 				if (!description.getText().isEmpty()) {
 					userDesc = description.getText();
@@ -326,7 +331,7 @@ public class Menu {
 
 			if (option == JOptionPane.OK_OPTION) {
 				if (!duration.getText().isEmpty() && duration.getText().chars().allMatch( Character::isDigit ) && newExercise.setDuration(Integer.parseInt(duration.getText()))) {
-					if(!duration.getText().isEmpty() && newExercise.setSetting(duration.getText())) {
+					if(!setting.getText().isEmpty() && newExercise.setSetting(setting.getText())) {
 						exit = true;
 						try {
 							FileSys.append(FileSys.EXERCISE_FILE, "Email: " + email + ", " + newExercise.toString());

@@ -14,8 +14,8 @@ public class WorkoutKeeper {
 	 * @throws HeadlessException
 	 */
 	public static void main(String[] args) throws HeadlessException, IOException {
-
-		String email = "";
+		User user = new User();
+		String status = "rePrompt";
 
 		// String checkPath = FileSys.PATH + FileSys.USER_FILE;
 		// String fileLine = FileSys.readLine(checkPath);
@@ -23,11 +23,11 @@ public class WorkoutKeeper {
 
 		if (FileSys.fileSetup()) {
 			do {
-				email = Menu.welcomeScreen(email);
-				if (email != "error" && email != "exit") {
-					email = Menu.loggedIn(email);
+				status = Menu.welcomeScreen(status, user);
+				if (status != "rePrompt" && status != "exit") {
+					status = Menu.loggedIn(user, status);
 				}
-			} while (email == "error");
+			} while (status == "rePrompt");
 		} else {
 			JOptionPane.showMessageDialog(null, "The system could not be opened.\nContact the admin for assistance.");
 		}
