@@ -13,12 +13,12 @@ public class Cardiovascular extends Exercise {
 		super();
 	}
 
-	public Cardiovascular(String description, String muscle) {
-		super(description, muscle);
+	public Cardiovascular(int ID, String description, String muscle) {
+		super(ID, description, muscle);
 	}
 
-	public Cardiovascular(String description, String muscle, int duration, String setting) {
-		this(description, muscle);
+	public Cardiovascular(int ID, String description, String muscle, int duration, String setting) {
+		this(ID, description, muscle);
 		this.duration = duration;
 		this.setting = setting;
 	}

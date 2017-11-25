@@ -20,8 +20,9 @@ public abstract class Exercise {
 		// exerciseID++;
 	}
 
-	public Exercise(String description, String muscle) {
+	public Exercise(int ID, String description, String muscle) {
 		this();
+		this.ID = ID;
 		this.description = description;
 		this.muscle = muscle;
 	}

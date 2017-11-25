@@ -17,9 +17,6 @@ public class WorkoutKeeper {
 		User user = new User();
 		String status = "rePrompt";
 
-		// String checkPath = FileSys.PATH + FileSys.USER_FILE;
-		// String fileLine = FileSys.readLine(checkPath);
-		// System.out.println(FileSys.getSubString(fileLine, "Email: "));
 
 		if (FileSys.fileSetup()) {
 			do {

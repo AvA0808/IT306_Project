@@ -13,12 +13,12 @@ public class WeightTraining extends Exercise {
 		super();
 	}
 
-	public WeightTraining(String description, String muscle) {
-		super(description, muscle);
+	public WeightTraining(int ID, String description, String muscle) {
+		super(ID, description, muscle);
 	}
 
-	public WeightTraining(String muscle, String description, int weight, int reps) {
-		this(description, muscle);
+	public WeightTraining(int ID, String muscle, String description, int weight, int reps) {
+		this(ID, description, muscle);
 		this.weight = weight;
 		this.reps = reps;
 	}
@@ -38,9 +38,9 @@ public class WeightTraining extends Exercise {
 	 * @return boolean true indicating that setting weight was successful
 	 * @throws IllegalArgumentException
 	 */
-	public boolean setWeight(int weight) throws IllegalArgumentException {
+	public boolean setWeight(int weight){
 		if (weight <= 0) {
-			throw new IllegalArgumentException("Error: not a valid weight for training equipment!");
+			return false;
 		} else {
 			this.weight = weight;
 			return true;
@@ -62,9 +62,9 @@ public class WeightTraining extends Exercise {
 	 * @return boolean true indicating that setting reps was successful
 	 * @throws IllegalArgumentException
 	 */
-	public boolean setReps(int reps) throws IllegalArgumentException {
+	public boolean setReps(int reps) {
 		if (reps <= 0) {
-			throw new IllegalArgumentException("Error: not a valid number of repetitions!");
+			return false;
 		} else {
 			this.reps = reps;
 			return true;
@@ -76,7 +76,7 @@ public class WeightTraining extends Exercise {
 	 * returns it
 	 */
 	public String toString() {
-		return ("Type: " + this.getClass().getName() + ", " + super.toString() + ", Weight: " + this.weight + ", Reps: "
+		return ("Type: " + this.getClass().getName() + ", " + super.toString() + "Weight: " + this.weight + ", Reps: "
 				+ this.reps);
 	}
 }

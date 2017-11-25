@@ -1,7 +1,11 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -36,8 +40,36 @@ public class FileSys {
 			}
 		}
 		
+		BufferedReader exID = new BufferedReader(new FileReader(PATH + EXERCISE_ID));     
+		if (exID.readLine() == null) {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(PATH + EXERCISE_ID));
+		    writer.write("0");
+		     
+		    writer.close();
+		}
 		
+		exID.close();
+		
+		BufferedReader wkID = new BufferedReader(new FileReader(PATH + WORKOUT_ID));     
+		if (wkID.readLine() == null) {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(PATH + WORKOUT_ID));
+		    writer.write("0");
+		     
+		    writer.close();
+		}
+		
+		wkID.close();
+			
 		return true;
+	}
+	
+	public static void incrementID(String file) throws IOException {
+		String tempID = FileSys.readLine(PATH + file);
+		int exerciseID = Integer.parseInt(tempID);
+		
+		PrintWriter pw = new PrintWriter(new FileWriter(new File(PATH + file), false));
+		pw.print(Integer.toString(++exerciseID));
+		pw.close();
 	}
 
 	public static boolean append( String file, String newLine) throws FileNotFoundException, IOException {
@@ -49,8 +81,9 @@ public class FileSys {
 			return true;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+//		TODO remove
+//		} catch (IOException e) {
+//			e.printStackTrace();
 		} finally {
 			pw.close();
 		}
@@ -96,6 +129,31 @@ public class FileSys {
 		} else {
 			return null;
 		}
-
 	}
+	
+	
+// Searches for a value in the whole text file, return true if found
+//	public static boolean isFoundInList(String file, String value, String search) throws FileNotFoundException {
+//		boolean found = false;
+//		Scanner scanner = null;
+//		String lineItem = "";
+//		
+//		try {
+//			scanner = new Scanner(new BufferedReader(new FileReader(new File(PATH + file))));
+//			String nextLine;
+//			
+//			while (scanner.hasNextLine()) {
+//				nextLine = scanner.nextLine();
+//				if (search == FileSys.getSubString(nextLine, value)) {
+//					found = true;
+//					break;
+//				}
+//			}
+//		}
+//		catch (FileNotFoundException e) {
+//			throw e;
+//		}
+//		scanner.close();
+//		return found;
+//	}
 }

@@ -5,7 +5,23 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class ExerciseTest {
-
+	@Test
+	public void createExercise() {
+		Cardiovascular cardio = new Cardiovascular(1, "Test", "Muscle", 5, "Floor");
+		Stretch stretch = new Stretch(2, "Test", "Muscle", "Do");
+		WeightTraining training = new WeightTraining(3, "Leg", "desc", 5, 4);
+		
+		System.out.println(cardio.toString());
+		System.out.println(stretch.toString());
+		System.out.println(training.toString());
+		System.out.println();
+		
+		assertNotNull(cardio);
+		assertNotNull(stretch);
+		assertNotNull(training);
+	}
+	
+	
 	@Test
 	public void test() {
 		//instantiate an object for all Exercise subclasses

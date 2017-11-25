@@ -6,7 +6,7 @@ public class SortSearch {
 	 * @param user The logged in user
 	 * @return list A list of all of the user's exercises
 	 */
-	public static LinkedList<Exercise> readExercise(User user) throws FileNotFoundException {
+	public static LinkedList<Exercise> readExercise(User user, int stretchCount, int cardioCount, int weightCount) throws FileNotFoundException {
 		//a linked list containing all the stored exercises for logged-in user
 		LinkedList<Exercise> list = new LinkedList<Exercise>();
 		
@@ -23,7 +23,7 @@ public class SortSearch {
 				//check if user's email matches the email listed; 
 				//if they match create exercise into an object to be stored in the linked list
 				if(current_email.equalsIgnoreCase(user.getEmail())) {
-					Exercise exercise = createExerciseFromFile(nextLine);
+					Exercise exercise = createExerciseFromFile(nextLine, stretchCount, cardioCount, weightCount);
 					//add the exercise to the list
 					list.add(exercise);
 				}
@@ -41,7 +41,7 @@ public class SortSearch {
 	 * @param record The String line to parse for object fields
 	 * @return exercise The exercise object created from the input record
 	 */
-	public static Exercise createExerciseFromFile(String record) {
+	public static Exercise createExerciseFromFile(String record, int stretchCount, int cardioCount, int weightCount) {
 		Exercise exercise = null;
 		//get the exercise's type for setting unique type fields
 		String type = FileSys.getSubString(record, "Type: ");
@@ -51,8 +51,7 @@ public class SortSearch {
 		String muscle = FileSys.getSubString(record, "Muscle Group: ");
 		
 		if(type.equalsIgnoreCase("Cardiovascular")) {
-			exercise = new Cardiovascular(description, muscle);
-			exercise.setID(id);
+			exercise = new Cardiovascular(id, description, muscle);
 			//downcast and set cardiovascular specific fields
 			if(exercise instanceof Cardiovascular) {
 				Cardiovascular cardio = (Cardiovascular) exercise;
@@ -61,14 +60,32 @@ public class SortSearch {
 				cardio.setSetting(FileSys.getSubString(record, "setting: "));
 				//upcast back again to return as exercise
 				exercise = (Exercise) cardio;
+				cardioCount++;
 			}
 		}
-		/*else if(type.equalsIgnoreCase("Stretch")) {
-			
-		}*/
-		/*else if(type.equalsIgnoreCase("Weight Training")) {
-			
-		}*/
+		else if(type.equalsIgnoreCase("Stretch")) {
+			exercise = new Stretch(id, description, muscle);
+			if(exercise instanceof Stretch) {
+				Stretch stretch = (Stretch) exercise;
+				//call Stretch specific methods
+				stretch.setInstructions(FileSys.getSubString(record, "Instructions: "));
+				//upcast back again to return as exercise
+				exercise = (Exercise) stretch;
+				stretchCount++;
+			}
+		} else if(type.equalsIgnoreCase("WeightTraining")) {
+			exercise = new WeightTraining(id, description, muscle);
+			if(exercise instanceof WeightTraining) {
+				WeightTraining weight = (WeightTraining) exercise;
+				//call WeightTraining specific methods
+				weight.setWeight(Integer.parseInt(FileSys.getSubString(record, "Weight: ")));
+				weight.setReps(Integer.parseInt(FileSys.getSubString(record, "Reps: ")));
+				//upcast back again to return as exercise
+				exercise = (Exercise) weight;
+				weightCount++;
+			}
+		}
+		
 		return exercise;
 	}
 	

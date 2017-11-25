@@ -1,6 +1,8 @@
 import java.awt.HeadlessException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -64,20 +66,24 @@ public class Menu {
 
 			if (option == JOptionPane.OK_OPTION) {
 				if (user.setEmail(email.getText())) {
-					if (user.setPassword(password.getText())) {
-						if (user.setFirstName(firstName.getText())) {
-							if (user.setLastName(lastName.getText())) {
-								validInput = true;
-								FileSys.append(FileSys.USER_FILE, user.toString());
+					if(!Validate.isEmailInList(user.getEmail())) {
+						if (user.setPassword(password.getText())) {
+							if (user.setFirstName(firstName.getText())) {
+								if (user.setLastName(lastName.getText())) {
+									validInput = true;
+									FileSys.append(FileSys.USER_FILE, user.toString());
+								} else {
+									JOptionPane.showMessageDialog(null, "The Last Name entered is not valid.\nTry again.");
+								}
 							} else {
-								JOptionPane.showMessageDialog(null, "The Last Name entered is not valid.\nTry again.");
+								JOptionPane.showMessageDialog(null, "The First Name entered is not valid.\nTry again.");
 							}
 						} else {
-							JOptionPane.showMessageDialog(null, "The First Name entered is not valid.\nTry again.");
+							JOptionPane.showMessageDialog(null,
+									"The Password entered is not valid.\nIt must contain at least 9 characters, at least 1 upper case and 1 lower case, and at least 4 numbers\nTry again.");
 						}
-					} else {
-						JOptionPane.showMessageDialog(null,
-								"The Password entered is not valid.\nIt must contain at least 9 characters, at least 1 upper case and 1 lower case, and at least 4 numbers\nTry again.");
+					}else {
+						JOptionPane.showMessageDialog(null, "The Email entered is already in use.\nYou must enter a new email.");
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "The Email entered is not a valid email.\nTry again.");
@@ -128,26 +134,34 @@ public class Menu {
 	}
 
 	private static void createUser(User user, String email) {
-		// TODO Auto-generated method stub
+		// TODO using the email passed in, read user file and build a user object from it, for the row that matches this email.
 		user.setEmail(email);
 	}
 
-	public static String loggedIn(User user, String status) {
+	public static <E> String loggedIn(User user, String status) throws FileNotFoundException {
 		String[] options = { "Exercise", "My Workouts", "Shared Workouts", "My Profile", "Logout" };
 		boolean exit = false;
-		System.out.println(user.getEmail());
+		
+		int stretchCount = 0, cardioCount = 0, weightCount = 0;
+		LinkedList<Exercise> exercises = SortSearch.readExercise(user, stretchCount, cardioCount, weightCount);
+		//Prints all elements in the LinkedList
+		exercises.forEach(System.out::println);
+		
 		do {
 			switch (JOptionPane.showOptionDialog(null, "User Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				exerciseSubMenu(user.getEmail());
+				exerciseSubMenu(user, exercises, stretchCount, cardioCount, weightCount);
 				break;
-			case 1:// TODO Auto-generated method stub
+			case 1:
+				workoutSubMenu(user, exercises, stretchCount, cardioCount, weightCount);
 				break;
-			case 2:// TODO Auto-generated method stub
+			case 2:
+				// TODO sharedWorkouts(user);
 				break;
 			case 3:
 				profileSubMenu(user);
+				break;
 			case 4:
 				exit = true;
 				status = "rePrompt";
@@ -162,19 +176,22 @@ public class Menu {
 		return status;
 	}
 
-	private static void exerciseSubMenu(String email) {
-		String[] options = { "Create New Exercise", "Sort Exercise", "Search Cardio\nExercise", "Cancel" };
+	private static void exerciseSubMenu(User user, LinkedList<Exercise> exercises, int stretchCount, int cardioCount, int weightCount) {
+		String[] options = { "Create New Exercise", "Sort Exercise", "Search CardioExercise", "Cancel" };
 		boolean exit = false;
 
 		do {
 			switch (JOptionPane.showOptionDialog(null, "Exercise Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				createExercise(email);
+				createExercise(user, exercises, stretchCount, cardioCount, weightCount);
+				exercises.forEach(System.out::println);
 				break;
-			case 1:// TODO Auto-generated method stub
+			case 1:
+				// TODO sortExercise();
 				break;
-			case 2:// TODO Auto-generated method stub
+			case 2:
+				// TODO cardioSearch();
 				break;
 			case 3:
 				exit = true;
@@ -208,6 +225,7 @@ public class Menu {
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			validInput = false;
 
+			//TODO the first and last name are not being displayed or set with the new user input. password too maybe
 			if (option == JOptionPane.OK_OPTION) {
 				//if (user.setEmail(new_email.getText())) {
 					if (user.setPassword(new_password.getText()) || new_password.getText().equals("")) {
@@ -234,14 +252,16 @@ public class Menu {
 		} while (!validInput);
 	}
 
-	private static void createExercise(String email) {
+	private static void createExercise(User user, LinkedList<Exercise> exercises, int stretchCount, int cardioCount, int weightCount) {
 		boolean exit = false;
 		int userType = -1;
+		String tempID = FileSys.readLine(FileSys.PATH + FileSys.EXERCISE_ID);
+		int exerciseID = Integer.parseInt(tempID);
 		String userDesc = "", userMuscle = "";
-
+		
 		JTextField description = new JTextField();
-		JComboBox muscle = new JComboBox(Exercise.MUSCLE_GROUP);
-		JComboBox type = new JComboBox(Exercise.EXERCISE_TYPE);
+		JComboBox<?> muscle = new JComboBox<Object>(Exercise.MUSCLE_GROUP);
+		JComboBox<?> type = new JComboBox<Object>(Exercise.EXERCISE_TYPE);
 		Object[] inputFields = { "Description:", description, "Muscle Group", muscle, "Exercise Type", type };
 
 		do {
@@ -266,13 +286,13 @@ public class Menu {
 
 		switch (userType) {
 		case 0:
-			createStretch(email, userDesc, userMuscle);
+			createStretch(user, userDesc, userMuscle, exerciseID, exercises, stretchCount);
 			break;
 		case 1:
-			createCardio(email, userDesc, userMuscle);
+			createCardio(user, userDesc, userMuscle, exerciseID, exercises, cardioCount);
 			break;
 		case 2:
-			createWeightTraining(email, userDesc, userMuscle);
+			createWeightTraining(user, userDesc, userMuscle, exerciseID, exercises, weightCount);
 			break;
 		case 3:
 			JOptionPane.showMessageDialog(null, "Returning to Exercise Menu.");
@@ -282,24 +302,25 @@ public class Menu {
 		}
 	}
 
-	private static void createStretch(String email, String userDesc, String userMuscle) {
+	private static void createStretch(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, int stretchCount) {
 		boolean exit = false;
-		String userInstructions = "";
+		
 		JTextField instructions = new JTextField();
 		Object[] inputFields = { "Instructions:", instructions };
-		Stretch newExercise = new Stretch(userDesc, userMuscle, userInstructions);
+		Stretch newExercise = new Stretch(exerciseID, userDesc, userMuscle);
 		
 		do {
 			int option = JOptionPane.showConfirmDialog(null, inputFields, "Create Stretch Exercise",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 			if (option == JOptionPane.OK_OPTION) {
-				//TODO change to use the .set method
-				if (!instructions.getText().isEmpty()) {
-					userInstructions = instructions.getText();
+				if (newExercise.setInstructions(instructions.getText())) {
 					exit = true;
 					try {
-						FileSys.append(FileSys.EXERCISE_FILE, "Email: " + email + ", " + newExercise.toString());
+						FileSys.append(FileSys.EXERCISE_FILE, "Email: " + user.getEmail() + ", " + newExercise.toString());
+						exercises.add(newExercise);
+						stretchCount++;
+						FileSys.incrementID(FileSys.EXERCISE_ID);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -312,14 +333,12 @@ public class Menu {
 				exit = true;
 			}
 		} while (!exit);
-		
-		
 	}
 
-	private static void createCardio(String email, String userDesc, String userMuscle) throws IllegalArgumentException{
+	private static void createCardio(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, int cardioCount) throws IllegalArgumentException{
 		boolean exit = false;
 		
-		Cardiovascular newExercise = new Cardiovascular(userDesc, userMuscle);
+		Cardiovascular newExercise = new Cardiovascular(exerciseID, userDesc, userMuscle);
 		
 		JTextField duration = new JTextField();
 		JTextField setting = new JTextField();
@@ -334,7 +353,10 @@ public class Menu {
 					if(!setting.getText().isEmpty() && newExercise.setSetting(setting.getText())) {
 						exit = true;
 						try {
-							FileSys.append(FileSys.EXERCISE_FILE, "Email: " + email + ", " + newExercise.toString());
+							FileSys.append(FileSys.EXERCISE_FILE, "Email: " + user.getEmail() + ", " + newExercise.toString());
+							exercises.add(newExercise);
+							cardioCount++;
+							FileSys.incrementID(FileSys.EXERCISE_ID);
 						} catch (FileNotFoundException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
@@ -351,16 +373,12 @@ public class Menu {
 				exit = true;
 			}
 		} while (!exit);
-		
-		
-		
-		 
 	}
 
-	private static void createWeightTraining(String email, String userDesc, String userMuscle) {
-		// TODO Auto-generated method stub
+	private static void createWeightTraining(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, int weightCount) {
 		boolean exit = false;
-
+		WeightTraining newExercise = new WeightTraining(exerciseID, userDesc, userMuscle);
+		
 		JTextField weight = new JTextField();
 		JTextField reps = new JTextField();
 		Object[] inputFields = { "Enter Weight (lbs) ", weight, "Enter Number of Reps", reps };
@@ -370,11 +388,66 @@ public class Menu {
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 			if (option == JOptionPane.OK_OPTION) {
-
+				if (!weight.getText().isEmpty() && weight.getText().chars().allMatch( Character::isDigit ) && newExercise.setWeight(Integer.parseInt(weight.getText()))) {
+					if (!reps.getText().isEmpty() && reps.getText().chars().allMatch( Character::isDigit ) && newExercise.setReps(Integer.parseInt(reps.getText()))) {
+						exit = true;
+						try {
+							FileSys.append(FileSys.EXERCISE_FILE, "Email: " + user.getEmail() + ", " + newExercise.toString());
+							exercises.add(newExercise);
+							weightCount++;
+							FileSys.incrementID(FileSys.EXERCISE_ID);
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "The reps provided was invalid.\nTry again.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "The weight provided was invalid.\nTry again.");
+				}
 			} else {
 				exit = true;
 			}
 
 		} while (!exit);
 	}
+
+	private static void workoutSubMenu(User user, LinkedList<Exercise> exercises, int stretchCount, int cardioCount, int weightCount) throws FileNotFoundException  {
+		String[] options = { "Generate Random Workout", "Create Custom Workout", "View Workouts", "Return" };
+		boolean exit = false;
+		
+		do {
+			switch (JOptionPane.showOptionDialog(null, "My Workouts Sub-Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
+			case 0:
+				generateWorkout(user, exercises, stretchCount, cardioCount, weightCount);
+				break;
+			case 1:
+				//TODO createWorkout();
+				break;
+			case 2:
+				//TODO viewWorkouts();
+				break;
+			case 3:
+				exit = true;
+				break;
+			default:
+				exit = true;
+				JOptionPane.showMessageDialog(null, "No Option Selected.");
+				break;
+			}
+		} while (!exit);
+	}
+
+	private static void generateWorkout(User user, LinkedList<Exercise> exercises, int stretchCount, int cardioCount, int weightCount) throws FileNotFoundException {
+		// TODO Auto-generated method stub
+		if(stretchCount >= Workout.MAX_STRETCH && cardioCount >= Workout.MAX_CARDIO && weightCount >= Workout.MAX_WEIGHT) {
+			
+		} else {
+			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
+		}
+	}
+	
 }
