@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 import java.io.FileNotFoundException;
 
 import org.junit.Test;
+import java.util.*;
 
 public class SortSearchTest {
 
@@ -17,7 +18,15 @@ public class SortSearchTest {
 		System.out.println(exercise_3.toString());
 		/* ABOVE WORKS!! */
 		
-		
+		//testing sortingMethod()
+		LinkedList<Exercise> list = null;
+		try {
+			 list = SortSearch.readExercise(new User("a", "b", "test@email.com", "password"));
+		}
+		catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		System.out.println(SortSearch.sortingMethod(list, "Type"));
 	}
 
 }

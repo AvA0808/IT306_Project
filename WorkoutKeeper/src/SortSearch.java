@@ -73,14 +73,45 @@ public class SortSearch {
 	}
 	
 	/*
-	 * Sorts the input array based on input sorting method
+	 * Sorts the exercises stored in the input linked list based on input sorting method
+	 * @param 
 	 * @param
-	 * @param
+	 * @return display String made by concatenating toString() returns of appropriate exercise objects
 	 */
-	/*public static void sortingMethod(Exercise[] array_exerc, String howSort) {
-		//concatenate the toString() of each exercise type to respective String variable (all cardio, all stretches, etc. as Alex suggested)
+	public static String sortingMethod(LinkedList<Exercise> list, String howSort) {
+		String display = "";
+		//for ease of sorting, turn linked list into array (length is 1 more than last element index)
+		Object[] array_exerc = list.toArray();
+		//concatenate toString() returns of appropriate exercise objects
 		if(howSort.equalsIgnoreCase("Type")) {
-			for
+			display += "SORTED BY EXERCISE TYPE\n\n";
+			String cardio = "";
+			String stretch = "";
+			String training = "";
+			for(int i = 0; i < array_exerc.length; i++) {
+				if(array_exerc[i] instanceof Cardiovascular) {
+					//downcast to call toString()
+					Cardiovascular c = (Cardiovascular)array_exerc[i];
+					cardio += array_exerc[i].toString() + "\n";
+				}
+				else if(array_exerc[i] instanceof Stretch) {
+					//downcast to call toString()
+					Stretch s = (Stretch)array_exerc[i];
+					stretch += array_exerc[i].toString() + "\n";
+				}
+				else if(array_exerc[i] instanceof WeightTraining) {
+					//downcast to call toString()
+					WeightTraining c = (WeightTraining)array_exerc[i];
+					training += array_exerc[i].toString() + "\n";
+				}
+			}
+			
+			//concatenate list of cardio exercises first, then stretches, then weight training
+			display += cardio + "\n" + stretch + "\n" + training;
 		}
-	}*/
+		/*else if(howSort.equalsIgnoreCase("Muscle Group")) {
+			
+		}*/
+		return display;
+	}
 }
