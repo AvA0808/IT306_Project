@@ -70,7 +70,13 @@ public class FileSys {
 
 		return readLine;
 	}
-
+	
+	/*
+	 * Returns the entry following the inputted delimiter
+	 * @param readLine The String to search the delimiter for
+	 * @param searchValue The delimiter to search for within the record/line
+	 * @return String following the delimiter in the record, or null if not found
+	 */
 	public static String getSubString(String readLine, String searchValue) {
 		String findValue = "";
 		String tempReadLine = readLine.toLowerCase();
