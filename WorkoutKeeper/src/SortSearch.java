@@ -184,16 +184,41 @@ public class SortSearch {
 		}
 		//only sorts cardio exercises based on duration
 		else if(howSort.equalsIgnoreCase("Duration")) {
-			display += sortDuration();
+			display += "SORTED BY CARDIOVASCULAR DURATION\n\n";
+			//get a linked list of only cardio exercises
+			LinkedList<Exercise> subList = returnTypeList(list, "Cardiovascular");
+			//pass the sublist to be sorted based on duration and returned as a String
+			display += sortDuration(subList);
 		}
 		return display;
 	}
 	
 	/*
-	 * 
+	 * Sorts the input sublist of cardiovascular exercises belonging to one user by duration
+	 * @param subList A sub-linked list containing only cardio exercises belonging to one user
+	 * @return display A String created from concatenating information across all cardio exercises
 	 */
-	public static String sortDuration() {
-		return "sorting duration";
+	private static String sortDuration(LinkedList<Exercise> subList) {
+		String display = "";
+		//create a tree set to pass in Comparator that compares by duration
+		TreeSet<Cardiovascular> tree = new TreeSet<Cardiovascular>(new ComparatorByDuration());
+		//add each item in the sublist of cardio exercises into the tree, which will sort by duration automatically
+		Iterator it = subList.iterator();
+		while(it.hasNext()) {
+			//safe to downcast
+			Cardiovascular current = (Cardiovascular)it.next();
+			//add item to tree
+			tree.add(current);
+		}
+		//turn tree into array so iteration can be done in order
+		Object[] tree_array = tree.toArray();
+		//iterate through the tree's contents and concatenate toString() together
+		for(int i = 0; i < tree_array.length; i++) {
+			//safe to downcast
+			Cardiovascular curr_cardio = (Cardiovascular)tree_array[i];
+			display += curr_cardio.toString() + "\n";
+		}
+		return display;
 	}
 	
 	/*

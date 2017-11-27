@@ -26,6 +26,9 @@ public class SortSearchTest {
 			 list = SortSearch.readExercise(new User("a", "b", "test@email.com", "password"), counter);
 			 System.out.println(SortSearch.sortingMethod(list, "Type") + "\n\n");
 			 System.out.println(SortSearch.sortingMethod(list, "Muscle Group"));
+			 
+			//testing sortDuration()
+			System.out.println(SortSearch.sortingMethod(list, "Duration"));
 		}
 		catch(FileNotFoundException e) {
 			e.printStackTrace();
