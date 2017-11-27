@@ -182,6 +182,36 @@ public class SortSearch {
 				throw e;
 			}
 		}
+		//only sorts cardio exercises based on duration
+		else if(howSort.equalsIgnoreCase("Duration")) {
+			display += sortDuration();
+		}
 		return display;
+	}
+	
+	/*
+	 * 
+	 */
+	public static String sortDuration() {
+		return "sorting duration";
+	}
+	
+	/*
+	 * Returns a linked list (sublist of input linked list) of a specific type of exercise
+	 * @param
+	 * @param
+	 * @return
+	 */
+	public static LinkedList<Exercise> returnTypeList(LinkedList<Exercise> list, String type) {
+		LinkedList<Exercise> subList = new LinkedList<Exercise>();
+		//iterate through the linked list and extract every record that falls under the input type
+		Iterator it = list.iterator();
+		while(it.hasNext()) {
+			Exercise current = (Exercise)it.next();
+			if(current.getClass().getName().equals(type)) {
+				subList.add(current);
+			}
+		}
+		return subList;
 	}
 }
