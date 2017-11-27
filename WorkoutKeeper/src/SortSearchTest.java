@@ -22,10 +22,12 @@ public class SortSearchTest {
 		LinkedList<Exercise> list = null;
 		try {
 			 list = SortSearch.readExercise(new User("a", "b", "test@email.com", "password"), 0, 0, 0);
+			 list = SortSearch.readExercise(new User("a", "b", "test@email.com", "password"), 0, 0, 0);
+			 System.out.println(SortSearch.sortingMethod(list, "Type") + "\n\n");
+			 System.out.println(SortSearch.sortingMethod(list, "Muscle Group"));
 		}
 		catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		System.out.println(SortSearch.sortingMethod(list, "Type"));
 	}
 }
