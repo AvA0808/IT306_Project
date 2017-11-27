@@ -1,5 +1,8 @@
-/* */
-
+/**
+ * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
+ * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
+ * 
+ */
 public class WeightTraining extends Exercise {
 	// the weight required for the exercise equipment in pounds (lbs)
 	private int weight;

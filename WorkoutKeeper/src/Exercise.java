@@ -1,5 +1,8 @@
-/* */
-
+/**
+ * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
+ * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
+ * 
+ */
 public abstract class Exercise {
 	// system-generated ID to track the number of exercises across all users
 	// private static int exerciseID = 0;

@@ -1,3 +1,8 @@
+/**
+ * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
+ * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
+ * 
+ */
 public class Counter {
 	private int stretchCount;
 	private int cardioCount;

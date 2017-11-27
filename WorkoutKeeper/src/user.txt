@@ -6,3 +6,4 @@ First Name: test, Last Name: random, Email: random@email.com, Password: 1234ABcd
 First Name: test, Last Name: new, Email: Testnew@email.com, Password: 1234ABcde
 First Name: A, Last Name: B, Email: test4@email.com, Password: 1234ABcde
 First Name: A, Last Name: B, Email: Test5@email.com, Password: 1234ABcde
+First Name: A, Last Name: B, Email: test6@email.com, Password: 1234ABcde

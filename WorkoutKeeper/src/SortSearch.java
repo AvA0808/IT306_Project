@@ -1,5 +1,11 @@
 import java.io.*;
 import java.util.*;
+
+/**
+ * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
+ * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
+ * 
+ */
 public class SortSearch {	
 	/*
 	 * Reads the logged-in user's exercises from a file and returns them as objects stored in a linked list

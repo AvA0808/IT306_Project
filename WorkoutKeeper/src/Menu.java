@@ -13,7 +13,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * @author Aleksandar new Line
+ * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
+ * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
+ * 
  */
 public class Menu {
 	/**
@@ -189,7 +191,6 @@ public class Menu {
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
 				createExercise(user, exercises, counter);
-				exercises.forEach(System.out::println);
 				break;
 			case 1:
 				sortExercise(exercises);

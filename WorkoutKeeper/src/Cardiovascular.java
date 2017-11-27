@@ -1,5 +1,8 @@
-/* */
-
+/**
+ * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
+ * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
+ * 
+ */
 public class Cardiovascular extends Exercise {
 	// number of minutes the exercise will be performed for
 	private int duration;
