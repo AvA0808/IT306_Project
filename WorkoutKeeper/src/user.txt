@@ -1,5 +1,5 @@
 First Name: Admin, Last Name: Administrator, Email: a@e.co, Password: 1
-First Name: tester, Last Name: testing, Email: test@email.com, Password: 1234ABcde
+First Name: tester, Last Name: testing, Email: test@email.com, Password: 1
 First Name: tester2, Last Name: testing2, Email: test2@email.com, Password: 1234ABcde
 First Name: Tester3, Last Name: Testing3, Email: test3@email.com, Password: 1234ABcde
 First Name: test, Last Name: random, Email: random@email.com, Password: 1234ABcde

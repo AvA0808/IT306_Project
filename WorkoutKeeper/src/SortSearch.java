@@ -149,35 +149,21 @@ public class SortSearch {
 					//grab the muscle group listed in that line
 					String current_muscle = FileSys.getSubString(nextLine, "Muscle Group: ");
 					//check which bucket muscle group belongs in
-					if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[0])) {
-						//add record to the corresponding bucket
-						list_muscle.get(0).add(nextLine);
-					}
-					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[1])) {
-						//add record to the corresponding bucket
-						list_muscle.get(1).add(nextLine);
-					}
-					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[2])) {
-						//add record to the corresponding bucket
-						list_muscle.get(2).add(nextLine);
-					}
-					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[3])) {
-						//add record to the corresponding bucket
-						list_muscle.get(3).add(nextLine);
-					}
-					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[4])) {
-						//add record to the corresponding bucket
-						list_muscle.get(4).add(nextLine);
-					}
-					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[9])) {
-						//add record to the corresponding bucket
-						list_muscle.get(9).add(nextLine);
+					boolean exit = false;
+					int x = 0;
+					while(!exit && x < Exercise.MUSCLE_GROUP.length) {
+						if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[x])) {
+							//add record to the corresponding bucket
+							list_muscle.get(x).add(nextLine);
+							exit = true;
+						}
+						x++;
 					}
 				}
 				scanner.close();
 				
 				//loop through every single cell in the array list
-				for(int y = 0; y < Exercise.MUSCLE_GROUP.length; y++) {
+				for(int y = 0; y < list_muscle.size(); y++) { //Exercise.MUSCLE_GROUP.length; y++) {
 					//within every cell, iterate through the linked list if not empty
 					if(!list_muscle.get(y).isEmpty()) {
 						Iterator it = list_muscle.get(y).iterator();

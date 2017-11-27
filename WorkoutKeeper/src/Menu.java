@@ -219,7 +219,7 @@ public class Menu {
 				JOptionPane.showMessageDialog(null, SortSearch.sortingMethod(exercises, "Type"));
 				break;
 			case 1:
-				SortSearch.sortingMethod(exercises, "Muscle");
+				JOptionPane.showMessageDialog(null, SortSearch.sortingMethod(exercises, "Muscle Group"));
 				break;
 			case 2:
 				exit = true;
