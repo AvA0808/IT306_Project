@@ -12,7 +12,7 @@ public abstract class Exercise {
 	public static final String[] MUSCLE_GROUP = { "(Top of Shoulders) Deltoids", "Shoulders", "(Upper Back) Trapezius",
 			"(Lower Back) Erector Spinae", "Chest", "(Lats) Latissimus Dorsi", "Biceps", "Triceps", "Forearms", "Abs",
 			"Obliques", "Quadriceps", "Hamstrings", "Calves" };
-	public static final String[] EXERCISE_TYPE = { "Stretch", "Cardiovascular", "Weigth Trainning" };
+	public static final String[] EXERCISE_TYPE = { "Stretch", "Cardiovascular", "WeightTraining" };
 
 	/* constructor assigns the newest ID and increments the exercise counter */
 	public Exercise() {

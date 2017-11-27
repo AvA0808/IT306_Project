@@ -122,7 +122,6 @@ public class SortSearch {
 					training += array_exerc[i].toString() + "\n";
 				}
 			}
-			
 			//concatenate list of cardio exercises first, then stretches, then weight training
 			display += cardio + "\n" + stretch + "\n" + training;
 		}

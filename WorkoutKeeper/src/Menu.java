@@ -1,9 +1,9 @@
 import java.awt.HeadlessException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
@@ -145,7 +145,7 @@ public class Menu {
 		int stretchCount = 0, cardioCount = 0, weightCount = 0;
 		LinkedList<Exercise> exercises = SortSearch.readExercise(user, stretchCount, cardioCount, weightCount);
 		//Prints all elements in the LinkedList
-		exercises.forEach(System.out::println);
+//		exercises.forEach(System.out::println);
 		
 		do {
 			switch (JOptionPane.showOptionDialog(null, "User Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
@@ -188,7 +188,7 @@ public class Menu {
 				exercises.forEach(System.out::println);
 				break;
 			case 1:
-				// TODO sortExercise();
+				sortExercise(exercises);
 				break;
 			case 2:
 				// TODO cardioSearch();
@@ -204,6 +204,30 @@ public class Menu {
 		} while (!exit);
 	}
 	
+	private static void sortExercise(LinkedList<Exercise> exercises) {
+		String[] options = { "Sort by Type", "Sort by Muscle Group", "Cancel" };
+		boolean exit = false;
+
+		do {
+			switch (JOptionPane.showOptionDialog(null, "How would you like to sort your Exercises?", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
+			case 0:
+				JOptionPane.showMessageDialog(null, SortSearch.sortingMethod(exercises, "Type"));
+				break;
+			case 1:
+				SortSearch.sortingMethod(exercises, "Muscle");
+				break;
+			case 2:
+				exit = true;
+				break;
+			default:
+				exit = true;
+				JOptionPane.showMessageDialog(null, "No Option Selected.");
+				break;
+			}
+		} while (!exit);		
+	}
+
 	/*
 	 * Displays the profile sub-menu and processes user selections and inputs
 	 * @param
@@ -410,7 +434,6 @@ public class Menu {
 			} else {
 				exit = true;
 			}
-
 		} while (!exit);
 	}
 
@@ -422,10 +445,10 @@ public class Menu {
 			switch (JOptionPane.showOptionDialog(null, "My Workouts Sub-Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				generateWorkout(user, exercises, stretchCount, cardioCount, weightCount);
+				generateWorkout(user, exercises, Validate.canMakeWorkout(stretchCount, cardioCount, weightCount));
 				break;
 			case 1:
-				//TODO createWorkout();
+				createWorkout(user, exercises, Validate.canMakeWorkout(stretchCount, cardioCount, weightCount));
 				break;
 			case 2:
 				//TODO viewWorkouts();
@@ -441,13 +464,50 @@ public class Menu {
 		} while (!exit);
 	}
 
-	private static void generateWorkout(User user, LinkedList<Exercise> exercises, int stretchCount, int cardioCount, int weightCount) throws FileNotFoundException {
+	private static void createWorkout(User user, LinkedList<Exercise> exercises, boolean canMakeWorkout) {
 		// TODO Auto-generated method stub
-		if(stretchCount >= Workout.MAX_STRETCH && cardioCount >= Workout.MAX_CARDIO && weightCount >= Workout.MAX_WEIGHT) {
+		if(canMakeWorkout) {
+//			JComboBox<?> strecth = new JComboBox<Object>((ComboBoxModel<Object>) exercises);
+//			JComboBox<?> cardio = new JComboBox<Object>((ComboBoxModel<Object>) exercises);
+//			JComboBox<?> weight = new JComboBox<Object>((ComboBoxModel<Object>) exercises);
+//			Object[] inputFields = { "Strecth:", strecth, "Cardio:", cardio, "Weight", weight };
+			Object[] workout = new Object[8];
 			
+			
+			workout[0] = pickExercise(exercises, "Pick your first Stretch");
 		} else {
 			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
 		}
 	}
+
+	private static Object pickExercise(LinkedList<Exercise> exercises, String msg) {
+		boolean exit = false;
+		Object selection = null;
+		Object[] array_exerc = exercises.toArray();
+		
+		JComboBox<?> dropDown = new JComboBox<Object>(array_exerc);
+		
+		do {
+			int option = JOptionPane.showConfirmDialog(null, dropDown, msg,
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			
+			if (option == JOptionPane.OK_OPTION) {
+				selection = array_exerc[dropDown.getSelectedIndex()];
+				exit = true;
+			} else {
+				exit = true;
+			}
+		} while (!exit);
+		
+		return selection;
+	}
 	
+	private static void generateWorkout(User user, LinkedList<Exercise> exercises, boolean canMakeWorkout) throws FileNotFoundException {
+		// TODO Auto-generated method stub
+		if(canMakeWorkout) {
+			System.out.println("Can Make Workout");
+		} else {
+			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
+		}
+	}
 }

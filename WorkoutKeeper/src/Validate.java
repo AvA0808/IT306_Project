@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 public class Validate {
 
 	/*
@@ -78,4 +80,14 @@ public class Validate {
 		scanner.close();
 		return flag;
 	}
+
+	public static boolean canMakeWorkout(int stretchCount, int cardioCount, int weightCount) {
+		if(stretchCount >= Workout.MAX_STRETCH && cardioCount >= Workout.MAX_CARDIO && weightCount >= Workout.MAX_WEIGHT) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
 }
