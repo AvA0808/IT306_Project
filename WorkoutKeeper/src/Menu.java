@@ -142,20 +142,23 @@ public class Menu {
 	public static <E> String loggedIn(User user, String status) throws FileNotFoundException {
 		String[] options = { "Exercise", "My Workouts", "Shared Workouts", "My Profile", "Logout" };
 		boolean exit = false;
+		Counter counter = new Counter();
 		
-		int stretchCount = 0, cardioCount = 0, weightCount = 0;
-		LinkedList<Exercise> exercises = SortSearch.readExercise(user, stretchCount, cardioCount, weightCount);
+		LinkedList<Exercise> exercises = SortSearch.readExercise(user, counter);
 		//Prints all elements in the LinkedList
 //		exercises.forEach(System.out::println);
+		System.out.println(counter.getStretchCount());
+		System.out.println(counter.getCardioCount());
+		System.out.println(counter.getWeightCount());
 		
 		do {
 			switch (JOptionPane.showOptionDialog(null, "User Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				exerciseSubMenu(user, exercises, stretchCount, cardioCount, weightCount);
+				exerciseSubMenu(user, exercises, counter);
 				break;
 			case 1:
-				workoutSubMenu(user, exercises, stretchCount, cardioCount, weightCount);
+				workoutSubMenu(user, exercises, counter);
 				break;
 			case 2:
 				// TODO sharedWorkouts(user);
@@ -177,7 +180,7 @@ public class Menu {
 		return status;
 	}
 
-	private static void exerciseSubMenu(User user, LinkedList<Exercise> exercises, int stretchCount, int cardioCount, int weightCount) {
+	private static void exerciseSubMenu(User user, LinkedList<Exercise> exercises, Counter counter) throws HeadlessException, FileNotFoundException {
 		String[] options = { "Create New Exercise", "Sort Exercise", "Search CardioExercise", "Cancel" };
 		boolean exit = false;
 
@@ -185,7 +188,7 @@ public class Menu {
 			switch (JOptionPane.showOptionDialog(null, "Exercise Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				createExercise(user, exercises, stretchCount, cardioCount, weightCount);
+				createExercise(user, exercises, counter);
 				exercises.forEach(System.out::println);
 				break;
 			case 1:
@@ -205,7 +208,7 @@ public class Menu {
 		} while (!exit);
 	}
 	
-	private static void sortExercise(LinkedList<Exercise> exercises) {
+	private static void sortExercise(LinkedList<Exercise> exercises) throws HeadlessException, FileNotFoundException {
 		String[] options = { "Sort by Type", "Sort by Muscle Group", "Cancel" };
 		boolean exit = false;
 
@@ -277,7 +280,7 @@ public class Menu {
 		} while (!validInput);
 	}
 
-	private static void createExercise(User user, LinkedList<Exercise> exercises, int stretchCount, int cardioCount, int weightCount) {
+	private static void createExercise(User user, LinkedList<Exercise> exercises, Counter counter) {
 		boolean exit = false;
 		int userType = -1;
 		String tempID = FileSys.readLine(FileSys.PATH + FileSys.EXERCISE_ID);
@@ -311,13 +314,13 @@ public class Menu {
 
 		switch (userType) {
 		case 0:
-			createStretch(user, userDesc, userMuscle, exerciseID, exercises, stretchCount);
+			createStretch(user, userDesc, userMuscle, exerciseID, exercises, counter);
 			break;
 		case 1:
-			createCardio(user, userDesc, userMuscle, exerciseID, exercises, cardioCount);
+			createCardio(user, userDesc, userMuscle, exerciseID, exercises, counter);
 			break;
 		case 2:
-			createWeightTraining(user, userDesc, userMuscle, exerciseID, exercises, weightCount);
+			createWeightTraining(user, userDesc, userMuscle, exerciseID, exercises, counter);
 			break;
 		case 3:
 			JOptionPane.showMessageDialog(null, "Returning to Exercise Menu.");
@@ -327,7 +330,7 @@ public class Menu {
 		}
 	}
 
-	private static void createStretch(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, int stretchCount) {
+	private static void createStretch(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, Counter counter) {
 		boolean exit = false;
 		
 		JTextField instructions = new JTextField();
@@ -344,7 +347,7 @@ public class Menu {
 					try {
 						FileSys.append(FileSys.EXERCISE_FILE, "Email: " + user.getEmail() + ", " + newExercise.toString());
 						exercises.add(newExercise);
-						stretchCount++;
+						counter.incStretchCount();
 						FileSys.incrementID(FileSys.EXERCISE_ID);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -360,7 +363,7 @@ public class Menu {
 		} while (!exit);
 	}
 
-	private static void createCardio(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, int cardioCount) throws IllegalArgumentException{
+	private static void createCardio(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, Counter counter) throws IllegalArgumentException{
 		boolean exit = false;
 		
 		Cardiovascular newExercise = new Cardiovascular(exerciseID, userDesc, userMuscle);
@@ -380,7 +383,7 @@ public class Menu {
 						try {
 							FileSys.append(FileSys.EXERCISE_FILE, "Email: " + user.getEmail() + ", " + newExercise.toString());
 							exercises.add(newExercise);
-							cardioCount++;
+							counter.incCardioCount();
 							FileSys.incrementID(FileSys.EXERCISE_ID);
 						} catch (FileNotFoundException e) {
 							e.printStackTrace();
@@ -400,7 +403,7 @@ public class Menu {
 		} while (!exit);
 	}
 
-	private static void createWeightTraining(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, int weightCount) {
+	private static void createWeightTraining(User user, String userDesc, String userMuscle, int exerciseID, LinkedList<Exercise> exercises, Counter counter) {
 		boolean exit = false;
 		WeightTraining newExercise = new WeightTraining(exerciseID, userDesc, userMuscle);
 		
@@ -419,7 +422,7 @@ public class Menu {
 						try {
 							FileSys.append(FileSys.EXERCISE_FILE, "Email: " + user.getEmail() + ", " + newExercise.toString());
 							exercises.add(newExercise);
-							weightCount++;
+							counter.incWeightCount();
 							FileSys.incrementID(FileSys.EXERCISE_ID);
 						} catch (FileNotFoundException e) {
 							e.printStackTrace();
@@ -438,7 +441,7 @@ public class Menu {
 		} while (!exit);
 	}
 
-	private static void workoutSubMenu(User user, LinkedList<Exercise> exercises, int stretchCount, int cardioCount, int weightCount) throws FileNotFoundException  {
+	private static void workoutSubMenu(User user, LinkedList<Exercise> exercises, Counter counter) throws FileNotFoundException  {
 		String[] options = { "Generate Random Workout", "Create Custom Workout", "View Workouts", "Return" };
 		boolean exit = false;
 		
@@ -446,10 +449,10 @@ public class Menu {
 			switch (JOptionPane.showOptionDialog(null, "My Workouts Sub-Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				generateWorkout(user, exercises, Validate.canMakeWorkout(stretchCount, cardioCount, weightCount));
+				generateWorkout(user, exercises, Validate.canMakeWorkout(counter));
 				break;
 			case 1:
-				createWorkout(user, exercises, Validate.canMakeWorkout(stretchCount, cardioCount, weightCount));
+				createWorkout(user, exercises, Validate.canMakeWorkout(counter));
 				break;
 			case 2:
 				//TODO viewWorkouts();

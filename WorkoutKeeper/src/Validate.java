@@ -81,8 +81,8 @@ public class Validate {
 		return flag;
 	}
 
-	public static boolean canMakeWorkout(int stretchCount, int cardioCount, int weightCount) {
-		if(stretchCount >= Workout.MAX_STRETCH && cardioCount >= Workout.MAX_CARDIO && weightCount >= Workout.MAX_WEIGHT) {
+	public static boolean canMakeWorkout(Counter counter) {
+		if(counter.getStretchCount() >= Workout.MAX_STRETCH && counter.getCardioCount() >= Workout.MAX_CARDIO && counter.getWeightCount() >= Workout.MAX_WEIGHT) {
 			return true;
 		} else {
 			return false;
