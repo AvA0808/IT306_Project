@@ -95,11 +95,11 @@ public class SortSearch {
 	 * @param
 	 * @return display String made by concatenating toString() returns of appropriate exercise objects
 	 */
-	public static String sortingMethod(LinkedList<Exercise> list, String howSort) {
+	public static String sortingMethod(LinkedList<Exercise> list, String howSort) throws FileNotFoundException {
 		String display = "";
 		//for ease of sorting, turn linked list into array (length is 1 more than last element index)
 		Object[] array_exerc = list.toArray();
-		//concatenate toString() returns of appropriate exercise objects
+		//concatenate toString() returns of appropriate exercise objects by type
 		if(howSort.equalsIgnoreCase("Type")) {
 			display += "SORTED BY EXERCISE TYPE\n\n";
 			String cardio = "";
@@ -126,9 +126,77 @@ public class SortSearch {
 			//concatenate list of cardio exercises first, then stretches, then weight training
 			display += cardio + "\n" + stretch + "\n" + training;
 		}
-		/*else if(howSort.equalsIgnoreCase("Muscle Group")) {
+		//concatenate toString() returns of appropriate exercise objects by muscle group: bucket sort
+		else if(howSort.equalsIgnoreCase("Muscle Group")) {
+			display += "SORTED BY EXERCISE MUSCLE GROUP\n\n";
+			//an array, providing indexes corresponding to the muscle groups, 
+			//holding linked lists in each cell to hold exercises toString() that fall under each muscle group
+			ArrayList<LinkedList<String>> list_muscle = new ArrayList<LinkedList<String>>();
+			//add the number of buckets (linked list) as there are muscle groups to the array
+			for(int x = 0; x < Exercise.MUSCLE_GROUP.length; x++) {
+				list_muscle.add(new LinkedList<String>());
+			}
 			
-		}*/
+			//open the proper file to read the exercises from (more efficient than downcasting from input list)
+			Scanner scanner = null;
+			try {
+				scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.EXERCISE_FILE))));
+				//if no exception thrown, proceed to file reading
+				while(scanner.hasNextLine()) {
+					//grab the next line
+					String nextLine = scanner.nextLine();
+					//discard the email portion
+					nextLine = nextLine.substring(nextLine.indexOf("Type: "));
+					//grab the muscle group listed in that line
+					String current_muscle = FileSys.getSubString(nextLine, "Muscle Group: ");
+					//check which bucket muscle group belongs in
+					if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[0])) {
+						//add record to the corresponding bucket
+						list_muscle.get(0).add(nextLine);
+					}
+					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[1])) {
+						//add record to the corresponding bucket
+						list_muscle.get(1).add(nextLine);
+					}
+					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[2])) {
+						//add record to the corresponding bucket
+						list_muscle.get(2).add(nextLine);
+					}
+					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[3])) {
+						//add record to the corresponding bucket
+						list_muscle.get(3).add(nextLine);
+					}
+					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[4])) {
+						//add record to the corresponding bucket
+						list_muscle.get(4).add(nextLine);
+					}
+					else if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[9])) {
+						//add record to the corresponding bucket
+						list_muscle.get(9).add(nextLine);
+					}
+				}
+				scanner.close();
+				
+				//loop through every single cell in the array list
+				for(int y = 0; y < Exercise.MUSCLE_GROUP.length; y++) {
+					//within every cell, iterate through the linked list if not empty
+					if(!list_muscle.get(y).isEmpty()) {
+						Iterator it = list_muscle.get(y).iterator();
+						while(it.hasNext()) {
+							//grab the next record as a String
+							String current = (String)it.next();
+							//concatenate it to variable we are going to return
+							display += current + "\n";
+						}
+						//add an extra line between muscle groups in display
+						display += "\n";
+					}
+				}
+			}
+			catch(FileNotFoundException e) {
+				throw e;
+			}
+		}
 		return display;
 	}
 }
