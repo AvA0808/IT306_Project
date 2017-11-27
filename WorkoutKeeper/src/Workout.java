@@ -13,10 +13,9 @@ public class Workout {
 	public static final int MAX_WEIGHT = 5;
 	
 	/*constructor assigns the newest ID and increments the workout counter */
-	public Workout() {
-		this.ID = workoutID;
-		workoutID++;
-		this.workout = new Exercise[MAX_CARDIO + MAX_STRETCH + MAX_WEIGHT];
+	public Workout(int ID, Exercise[] exercises) {
+		this.ID = ID;
+		this.workout = exercises;
 	}
 	
 	public int getWorkoutID() {

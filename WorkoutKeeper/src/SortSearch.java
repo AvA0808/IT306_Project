@@ -163,7 +163,7 @@ public class SortSearch {
 				scanner.close();
 				
 				//loop through every single cell in the array list
-				for(int y = 0; y < list_muscle.size(); y++) { //Exercise.MUSCLE_GROUP.length; y++) {
+				for(int y = 0; y < list_muscle.size(); y++) {
 					//within every cell, iterate through the linked list if not empty
 					if(!list_muscle.get(y).isEmpty()) {
 						Iterator it = list_muscle.get(y).iterator();

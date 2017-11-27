@@ -2,7 +2,9 @@ import java.awt.HeadlessException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -145,11 +147,9 @@ public class Menu {
 		Counter counter = new Counter();
 		
 		LinkedList<Exercise> exercises = SortSearch.readExercise(user, counter);
+		//TODO remove
 		//Prints all elements in the LinkedList
 //		exercises.forEach(System.out::println);
-		System.out.println(counter.getStretchCount());
-		System.out.println(counter.getCardioCount());
-		System.out.println(counter.getWeightCount());
 		
 		do {
 			switch (JOptionPane.showOptionDialog(null, "User Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
@@ -283,8 +283,7 @@ public class Menu {
 	private static void createExercise(User user, LinkedList<Exercise> exercises, Counter counter) {
 		boolean exit = false;
 		int userType = -1;
-		String tempID = FileSys.readLine(FileSys.PATH + FileSys.EXERCISE_ID);
-		int exerciseID = Integer.parseInt(tempID);
+		int exerciseID = Integer.parseInt(FileSys.readLine(FileSys.PATH + FileSys.EXERCISE_ID));
 		String userDesc = "", userMuscle = "";
 		
 		JTextField description = new JTextField();
@@ -471,32 +470,95 @@ public class Menu {
 	private static void createWorkout(User user, LinkedList<Exercise> exercises, boolean canMakeWorkout) {
 		// TODO Auto-generated method stub
 		if(canMakeWorkout) {
-//			JComboBox<?> strecth = new JComboBox<Object>((ComboBoxModel<Object>) exercises);
-//			JComboBox<?> cardio = new JComboBox<Object>((ComboBoxModel<Object>) exercises);
-//			JComboBox<?> weight = new JComboBox<Object>((ComboBoxModel<Object>) exercises);
-//			Object[] inputFields = { "Strecth:", strecth, "Cardio:", cardio, "Weight", weight };
-			Object[] workout = new Object[8];
+			int workoutID = Integer.parseInt(FileSys.readLine(FileSys.PATH + FileSys.WORKOUT_ID));
 			
+			LinkedList<Exercise> workout = new LinkedList<Exercise>();
+			LinkedList<Exercise> stretches = SortSearch.returnTypeList(exercises, Exercise.EXERCISE_TYPE[0]);
+			LinkedList<Exercise> cardios = SortSearch.returnTypeList(exercises, Exercise.EXERCISE_TYPE[1]);
+			LinkedList<Exercise> weights = SortSearch.returnTypeList(exercises, Exercise.EXERCISE_TYPE[2]);
 			
-			workout[0] = pickExercise(exercises, "Pick your first Stretch");
+			workout.add(pickExercise(stretches, "Pick your First Stretch Exercise", workout));
+			removeSelection(stretches, workout.peekLast());
+			workout.add(pickExercise(stretches, "Pick your Second Stretch Exercise", workout));
+			removeSelection(stretches, workout.peekLast());
+			workout.add(pickExercise(stretches, "Pick your Third Stretch Exercise", workout));
+			removeSelection(stretches, workout.peekLast());
+			
+			workout.add(pickExercise(cardios, "Pick your First and only Cardio Exercise", workout));
+			removeSelection(cardios, workout.peekLast());
+			
+			workout.add(pickExercise(weights, "Pick your First Weight Training Exercise", workout));
+			removeSelection(weights, workout.peekLast());
+			workout.add(pickExercise(weights, "Pick your Second Weight Training Exercise", workout));
+			removeSelection(weights, workout.peekLast());
+			workout.add(pickExercise(weights, "Pick your Third Weight Training Exercise", workout));
+			removeSelection(weights, workout.peekLast());
+			workout.add(pickExercise(weights, "Pick your Fourth Weight Training Exercise", workout));
+			removeSelection(weights, workout.peekLast());
+			workout.add(pickExercise(weights, "Pick your Fifth Weight Training Exercise", workout));
+			removeSelection(weights, workout.peekLast());
+			
+			Exercise[] temp = new Exercise[workout.size()];
+			Iterator<Exercise> it = workout.iterator();
+			int x = 0;
+			while(it.hasNext()) {
+				temp[x++] = it.next();
+			}
+			Workout newWorkout = new Workout(workoutID, temp);
+			addWorkoutToFile(user, newWorkout);
+			JOptionPane.showMessageDialog(null, "The following workout has been saved: " + newWorkout.toString());
 		} else {
 			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
 		}
 	}
 
-	private static Object pickExercise(LinkedList<Exercise> exercises, String msg) {
+	private static void removeSelection(LinkedList<Exercise> exercise, Exercise picked) {
+		Iterator<Exercise> it = exercise.iterator();
+		boolean found = false;
+		while(it.hasNext() && !found) {
+			if(it.next().equals(picked)) { 
+				it.remove();
+			}
+		}
+	}
+
+	private static void addWorkoutToFile(User user, Workout workout) {
+		try {
+			FileSys.append(FileSys.WORKOUT_FILE, "Email: " + user.getEmail() + ", " + workout.toString());
+			FileSys.incrementID(FileSys.WORKOUT_ID);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static Exercise pickExercise(LinkedList<Exercise> exercises, String msg, LinkedList<Exercise> workout) {
+		//TODO remove exercises that are already selected.
 		boolean exit = false;
-		Object selection = null;
-		Object[] array_exerc = exercises.toArray();
+		Exercise selection = null;
+		String alreadySelected = "";
+		if(workout == null) {
+			alreadySelected = "Select your first Exercise.";
+		} else {
+			Iterator<Exercise> iter = workout.iterator();
+			alreadySelected = "Exercise already Added:\n";
+			while(iter.hasNext()) {
+				alreadySelected += iter.next() + "\n";
+			}
+			alreadySelected += "\n";
+		}
 		
+		Object[] array_exerc = exercises.toArray();
 		JComboBox<?> dropDown = new JComboBox<Object>(array_exerc);
+		Object[] inputFields = { alreadySelected, msg, dropDown,};
 		
 		do {
-			int option = JOptionPane.showConfirmDialog(null, dropDown, msg,
+			int option = JOptionPane.showConfirmDialog(null, inputFields, "Select an Exercise",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			
 			if (option == JOptionPane.OK_OPTION) {
-				selection = array_exerc[dropDown.getSelectedIndex()];
+				selection = (Exercise) array_exerc[dropDown.getSelectedIndex()];
 				exit = true;
 			} else {
 				exit = true;
