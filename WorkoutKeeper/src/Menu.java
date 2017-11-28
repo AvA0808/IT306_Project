@@ -1,11 +1,6 @@
 import java.awt.HeadlessException;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -628,14 +623,33 @@ public class Menu {
 		return selection;
 	}
 	
+	//public static String viewWorkouts(User user)
 	
-	public static ArrayList<String> viewWorkouts(User user) throws FileNotFoundException {
-		Scanner scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.WORKOUT_FILE))));
+	/*
+	 * Reads workout records from the workout database(text file) belonging to a single user and returns them in an array list
+	 * @param
+	 * @return
+	 */
+	public static ArrayList<String> readWorkouts(User user) throws FileNotFoundException {
+		ArrayList<String> list = new ArrayList<String>();
+		Scanner scanner = null;
 		try {
-			
+			scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.WORKOUT_FILE))));
+			//if no exception thrown, proceed to file reading
+			String nextLine = "";
+			//keep iterating while there are more records to read
+			while(scanner.hasNextLine()) {
+				//grab next record
+				nextLine = scanner.nextLine();
+				//add to array list if it belongs to the input user
+				if(FileSys.getSubString(nextLine, "Email: ").equals(user.getEmail())) {
+					list.add(nextLine);
+				}
+			}
 		}
-		catch( ) {
-			
+		catch(FileNotFoundException e) {
+			throw e;
 		}
+		return list;
 	}
 }
