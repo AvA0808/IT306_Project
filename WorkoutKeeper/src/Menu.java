@@ -577,4 +577,14 @@ public class Menu {
 			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
 		}
 	}
+	
+	public static ArrayList<String> viewWorkouts(User user) throws FileNotFoundException {
+		Scanner scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.WORKOUT_FILE))));
+		try {
+			
+		}
+		catch( ) {
+			
+		}
+	}
 }

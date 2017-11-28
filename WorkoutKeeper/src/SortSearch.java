@@ -245,4 +245,26 @@ public class SortSearch {
 		}
 		return subList;
 	}
+	
+	/*
+	 * Searches the cardiovascular exercises belonging to the user based on a input duration
+	 * @param
+	 * @param
+	 * @return
+	 */
+	public static String searchDuration(LinkedList<Exercise> list, int duration) {
+		String display = "SEARCH BY DURATION RESULTS\n\n";
+		//retrieve a sublist of the user's cardiovascular exercises
+		LinkedList<Exercise> subList = returnTypeList(list, "Cardiovascular");
+		Iterator it = subList.iterator();
+		//iterate through and examine each record's duration (may be multiple matches)
+		while(it.hasNext()) {
+			Cardiovascular current = (Cardiovascular)it.next();
+			if(current.getDuration() == duration) {
+				//if match, concatenate its toString() to display String
+				display += current.toString() + "\n";
+			}
+		}
+		return display;
+	}
 }

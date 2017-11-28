@@ -5,7 +5,7 @@ Email: test@email.com, Type: Stretch, ID: 4, Description: Testing, Muscle Group:
 Email: test@email.com, Type: Cardiovascular, ID: 5, Description: Testing, Muscle Group: Shoulders, Duration: 44, Setting: Floor
 Email: test@email.com, Type: WeightTraining, ID: 6, Description: Testing, Muscle Group: Abs, Weight: 24, Reps: 11
 Email: test@email.com, Type: Stretch, ID: 7, Description: Testing, Muscle Group: Abs, Instructions: Test, 
-Email: test@email.com, Type: Cardiovascular, ID: 8, Description: Testing, Muscle Group: Biceps, Duration: 45, Setting: Floor
+Email: test@email.com, Type: Cardiovascular, ID: 8, Description: Testing, Muscle Group: Biceps, Duration: 53, Setting: Floor
 Email: test@email.com, Type: WeightTraining, ID: 9, Description: Testing, Muscle Group: Shoulders, Weight: 25, Reps: 12
 Email: test@email.com, Type: Stretch, ID: 10, Description: Testing, Muscle Group: Shoulders, Instructions: Test, 
 Email: test@email.com, Type: Cardiovascular, ID: 11, Description: Testing, Muscle Group: Abs, Duration: 46, Setting: Floor
