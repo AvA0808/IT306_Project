@@ -2,7 +2,6 @@ import java.awt.HeadlessException;
 import java.io.*;
 import java.util.*;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
@@ -219,7 +218,8 @@ public class Menu {
 				sortExercise(exercises);
 				break;
 			case 2:
-				// TODO cardioSearch();
+				int duration = Integer.parseInt(JOptionPane.showInputDialog("Enter the Duration you would like to search for."));
+				JOptionPane.showMessageDialog(null, SortSearch.searchDuration(exercises, duration));
 				break;
 			case 3:
 				exit = true;
@@ -337,7 +337,6 @@ public class Menu {
 			int option = JOptionPane.showConfirmDialog(null, inputFields, "Create New Exercise",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			
-			//TODO add a check to make sure the description provided is not already in their system
 			if (option == JOptionPane.OK_OPTION) {
 				if(!FileSys.isFoundInList(FileSys.EXERCISE_FILE, "Description: ", description.getText())) {	
 					if (!description.getText().isEmpty()) {
@@ -693,6 +692,7 @@ public class Menu {
 		catch(FileNotFoundException e) {
 			throw e;
 		}
+		scanner.close();
 		return list;
 	}
 }

@@ -113,18 +113,12 @@ public class SortSearch {
 			String training = "";
 			for(int i = 0; i < array_exerc.length; i++) {
 				if(array_exerc[i] instanceof Cardiovascular) {
-					//downcast to call toString()
-					Cardiovascular c = (Cardiovascular)array_exerc[i];
 					cardio += array_exerc[i].toString() + "\n";
 				}
 				else if(array_exerc[i] instanceof Stretch) {
-					//downcast to call toString()
-					Stretch s = (Stretch)array_exerc[i];
 					stretch += array_exerc[i].toString() + "\n";
 				}
 				else if(array_exerc[i] instanceof WeightTraining) {
-					//downcast to call toString()
-					WeightTraining c = (WeightTraining)array_exerc[i];
 					training += array_exerc[i].toString() + "\n";
 				}
 			}
@@ -172,7 +166,7 @@ public class SortSearch {
 				for(int y = 0; y < list_muscle.size(); y++) {
 					//within every cell, iterate through the linked list if not empty
 					if(!list_muscle.get(y).isEmpty()) {
-						Iterator it = list_muscle.get(y).iterator();
+						Iterator<?> it = list_muscle.get(y).iterator();
 						while(it.hasNext()) {
 							//grab the next record as a String
 							String current = (String)it.next();
@@ -204,12 +198,12 @@ public class SortSearch {
 	 * @param subList A sub-linked list containing only cardio exercises belonging to one user
 	 * @return display A String created from concatenating information across all cardio exercises
 	 */
-	private static String sortDuration(LinkedList<Exercise> subList) {
+	public static String sortDuration(LinkedList<Exercise> subList) {
 		String display = "";
 		//create a tree set to pass in Comparator that compares by duration
 		TreeSet<Cardiovascular> tree = new TreeSet<Cardiovascular>(new ComparatorByDuration());
 		//add each item in the sublist of cardio exercises into the tree, which will sort by duration automatically
-		Iterator it = subList.iterator();
+		Iterator<Exercise> it = subList.iterator();
 		while(it.hasNext()) {
 			//safe to downcast
 			Cardiovascular current = (Cardiovascular)it.next();
@@ -236,7 +230,7 @@ public class SortSearch {
 	public static LinkedList<Exercise> returnTypeList(LinkedList<Exercise> list, String type) {
 		LinkedList<Exercise> subList = new LinkedList<Exercise>();
 		//iterate through the linked list and extract every record that falls under the input type
-		Iterator it = list.iterator();
+		Iterator<Exercise> it = list.iterator();
 		while(it.hasNext()) {
 			Exercise current = (Exercise)it.next();
 			if(current.getClass().getName().equals(type)) {
@@ -256,7 +250,7 @@ public class SortSearch {
 		String display = "SEARCH BY DURATION RESULTS\n\n";
 		//retrieve a sublist of the user's cardiovascular exercises
 		LinkedList<Exercise> subList = returnTypeList(list, "Cardiovascular");
-		Iterator it = subList.iterator();
+		Iterator<Exercise> it = subList.iterator();
 		//iterate through and examine each record's duration (may be multiple matches)
 		while(it.hasNext()) {
 			Cardiovascular current = (Cardiovascular)it.next();

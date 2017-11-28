@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
 
 /**
  * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
