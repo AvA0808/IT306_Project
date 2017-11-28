@@ -48,15 +48,20 @@ public class Workout {
 		}
 	}
 	
+	public String printExercises() {
+		String list = "Workout ID: " + this.ID + "\n";
+		for(int i = 0; i < this.workout.length; i++) {
+			list += this.workout[i] + "\n";
+		}
+		return list;
+	}
+	
 	/* Prepares a record for the workout */
 	public String toString() {
-		String list = "";
+		String list = "Workout ID: " + this.ID;
 		for(int i = 0; i < this.workout.length; i++) {
-			list += this.workout[i];
-			if(i < this.workout.length-1) {
-				list += ", ";
-			}
+			list += ", Exercise #" + (i + 1) + " ID: " + this.workout[i].getID();
 		}
-		return ("ID: " + this.ID + ", Workouts: " + list);
+		return list;
 	}
 }

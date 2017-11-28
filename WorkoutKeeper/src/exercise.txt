@@ -54,3 +54,6 @@ Email: test@email.com, Type: Cardiovascular, ID: 53, Description: Testing, Muscl
 Email: test@email.com, Type: Stretch, ID: 54, Description: Test, Muscle Group: (Top of Shoulders) Deltoids, , Instructions: Test
 Email: test@email.com, Type: Cardiovascular, ID: 55, Description: Test, Muscle Group: (Top of Shoulders) Deltoids, Duration: 10, Setting: Test
 Email: test@email.com, Type: Stretch, ID: 56, Description: New Exercise, Muscle Group: (Lower Back) Erector Spinae, Instructions: Stretch your Back
+Email: test@email.com, Type: Stretch, ID: 57, Description: Test, Muscle Group: Chest, Instructions: Testing
+Email: test@email.com, Type: Cardiovascular, ID: 58, Description: Test, Muscle Group: Calves, Duration: 10, Setting: Treadmill
+Email: test@email.com, Type: WeightTraining, ID: 59, Description: Test, Muscle Group: Abs, Weight: 30, Reps: 15

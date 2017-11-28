@@ -82,9 +82,6 @@ public class FileSys {
 			return true;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-//		TODO remove
-//		} catch (IOException e) {
-//			e.printStackTrace();
 		} finally {
 			pw.close();
 		}
@@ -133,28 +130,28 @@ public class FileSys {
 	}
 	
 	
-// Searches for a value in the whole text file, return true if found
-//	public static boolean isFoundInList(String file, String value, String search) throws FileNotFoundException {
-//		boolean found = false;
-//		Scanner scanner = null;
-//		String lineItem = "";
-//		
-//		try {
-//			scanner = new Scanner(new BufferedReader(new FileReader(new File(PATH + file))));
-//			String nextLine;
-//			
-//			while (scanner.hasNextLine()) {
-//				nextLine = scanner.nextLine();
-//				if (search == FileSys.getSubString(nextLine, value)) {
-//					found = true;
-//					break;
-//				}
-//			}
-//		}
-//		catch (FileNotFoundException e) {
-//			throw e;
-//		}
-//		scanner.close();
-//		return found;
-//	}
+    //Searches for a value in the whole text file, return true if found
+	public static boolean isFoundInList(String file, String value, String searchFor) throws FileNotFoundException {
+		boolean found = false;
+		Scanner scanner = null;
+		String lineItem = "";
+		
+		try {
+			scanner = new Scanner(new BufferedReader(new FileReader(new File(PATH + file))));
+			String nextLine;
+			
+			while (scanner.hasNextLine()) {
+				nextLine = scanner.nextLine();
+				if (searchFor == FileSys.getSubString(nextLine, value)) {
+					found = true;
+					break;
+				}
+			}
+		}
+		catch (FileNotFoundException e) {
+			throw e;
+		}
+		scanner.close();
+		return found;
+	}
 }

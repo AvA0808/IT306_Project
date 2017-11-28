@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Random;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -298,13 +299,17 @@ public class Menu {
 			
 			//TODO add a check to make sure the description provided is not already in their system
 			if (option == JOptionPane.OK_OPTION) {
-				if (!description.getText().isEmpty()) {
-					userDesc = description.getText();
-					userMuscle = Exercise.MUSCLE_GROUP[muscle.getSelectedIndex()];
-					userType = type.getSelectedIndex();
-					exit = true;
+				if(true) {	
+					if (!description.getText().isEmpty()) {
+						userDesc = description.getText();
+						userMuscle = Exercise.MUSCLE_GROUP[muscle.getSelectedIndex()];
+						userType = type.getSelectedIndex();
+						exit = true;
+					} else {
+						JOptionPane.showMessageDialog(null, "The Description of the Exercise cannot be empty.\nTry Again.");
+					}
 				} else {
-					JOptionPane.showMessageDialog(null, "The Description of the Exercise cannot be empty.\nTry Again.");
+					JOptionPane.showMessageDialog(null, "You have already entered this Description for another Exercise.\nYou must enter a different Description for a new Exercise.\n Try again.");
 				}
 			} else {
 				exit = true;
@@ -449,7 +454,7 @@ public class Menu {
 			switch (JOptionPane.showOptionDialog(null, "My Workouts Sub-Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				generateWorkout(user, exercises, Validate.canMakeWorkout(counter));
+				generateRandomWorkout(user, exercises, Validate.canMakeWorkout(counter));
 				break;
 			case 1:
 				createWorkout(user, exercises, Validate.canMakeWorkout(counter));
@@ -469,7 +474,6 @@ public class Menu {
 	}
 
 	private static void createWorkout(User user, LinkedList<Exercise> exercises, boolean canMakeWorkout) {
-		// TODO Auto-generated method stub
 		if(canMakeWorkout) {
 			int workoutID = Integer.parseInt(FileSys.readLine(FileSys.PATH + FileSys.WORKOUT_ID));
 			
@@ -507,7 +511,7 @@ public class Menu {
 			}
 			Workout newWorkout = new Workout(workoutID, temp);
 			addWorkoutToFile(user, newWorkout);
-			JOptionPane.showMessageDialog(null, "The following workout has been saved: " + newWorkout.toString());
+			JOptionPane.showMessageDialog(null, "The following workout has been saved:\n" + newWorkout.toString() + "\n\n" + newWorkout.printExercises());
 		} else {
 			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
 		}
@@ -535,7 +539,6 @@ public class Menu {
 	}
 	
 	private static Exercise pickExercise(LinkedList<Exercise> exercises, String msg, LinkedList<Exercise> workout) {
-		//TODO remove exercises that are already selected.
 		boolean exit = false;
 		Exercise selection = null;
 		String alreadySelected = "";
@@ -562,19 +565,67 @@ public class Menu {
 				selection = (Exercise) array_exerc[dropDown.getSelectedIndex()];
 				exit = true;
 			} else {
-				exit = true;
+				exit = false;
 			}
 		} while (!exit);
 		
 		return selection;
 	}
 	
-	private static void generateWorkout(User user, LinkedList<Exercise> exercises, boolean canMakeWorkout) throws FileNotFoundException {
-		// TODO Auto-generated method stub
+	private static void generateRandomWorkout(User user, LinkedList<Exercise> exercises, boolean canMakeWorkout) throws FileNotFoundException {
 		if(canMakeWorkout) {
-			System.out.println("Can Make Workout");
+			int workoutID = Integer.parseInt(FileSys.readLine(FileSys.PATH + FileSys.WORKOUT_ID));
+			
+			LinkedList<Exercise> workout = new LinkedList<Exercise>();
+			LinkedList<Exercise> stretches = SortSearch.returnTypeList(exercises, Exercise.EXERCISE_TYPE[0]);
+			LinkedList<Exercise> cardios = SortSearch.returnTypeList(exercises, Exercise.EXERCISE_TYPE[1]);
+			LinkedList<Exercise> weights = SortSearch.returnTypeList(exercises, Exercise.EXERCISE_TYPE[2]);
+			
+			workout.add(pickRandomWorkout(stretches, workout));
+			removeSelection(stretches, workout.peekLast());
+			workout.add(pickRandomWorkout(stretches, workout));
+			removeSelection(stretches, workout.peekLast());
+			workout.add(pickRandomWorkout(stretches, workout));
+			removeSelection(stretches, workout.peekLast());
+			
+			workout.add(pickRandomWorkout(cardios, workout));
+			removeSelection(cardios, workout.peekLast());
+			
+			workout.add(pickRandomWorkout(weights, workout));
+			removeSelection(weights, workout.peekLast());
+			workout.add(pickRandomWorkout(weights, workout));
+			removeSelection(weights, workout.peekLast());
+			workout.add(pickRandomWorkout(weights, workout));
+			removeSelection(weights, workout.peekLast());
+			workout.add(pickRandomWorkout(weights, workout));
+			removeSelection(weights, workout.peekLast());
+			workout.add(pickRandomWorkout(weights, workout));
+			removeSelection(weights, workout.peekLast());
+			
+			Exercise[] temp = new Exercise[workout.size()];
+			Iterator<Exercise> it = workout.iterator();
+			int x = 0;
+			while(it.hasNext()) {
+				temp[x++] = it.next();
+			}
+			Workout newWorkout = new Workout(workoutID, temp);
+			addWorkoutToFile(user, newWorkout);
+			JOptionPane.showMessageDialog(null, "The following workout has been saved:\n" + newWorkout.toString() + "\n\n" + newWorkout.printExercises());
+
 		} else {
 			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
 		}
 	}
+	
+	private static Exercise pickRandomWorkout(LinkedList<Exercise> exercises, LinkedList<Exercise> workout) {		
+		Object[] array_exerc = exercises.toArray();
+		
+		int len = exercises.size(); 
+		Random randomGenerator = new Random();
+		int randomInt = randomGenerator.nextInt(len);
+		
+		Exercise selection = (Exercise) array_exerc[randomInt];
+		return selection;
+	}
+	
 }
