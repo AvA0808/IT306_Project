@@ -134,7 +134,6 @@ public class FileSys {
 	public static boolean isFoundInList(String file, String value, String searchFor) throws FileNotFoundException {
 		boolean found = false;
 		Scanner scanner = null;
-		String lineItem = "";
 		
 		try {
 			scanner = new Scanner(new BufferedReader(new FileReader(new File(PATH + file))));
@@ -142,7 +141,8 @@ public class FileSys {
 			
 			while (scanner.hasNextLine()) {
 				nextLine = scanner.nextLine();
-				if (searchFor == FileSys.getSubString(nextLine, value)) {
+				String inFile = FileSys.getSubString(nextLine, value);
+				if (searchFor.equalsIgnoreCase(inFile) ) {
 					found = true;
 					break;
 				}

@@ -6,6 +6,8 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
@@ -208,15 +210,33 @@ public class Menu {
 	private static void sortExercise(LinkedList<Exercise> exercises) throws HeadlessException, FileNotFoundException {
 		String[] options = { "Sort by Type", "Sort by Muscle Group", "Cancel" };
 		boolean exit = false;
-
+		
+		JTextArea textArea = new JTextArea(30, 80);
+	    		
 		do {
 			switch (JOptionPane.showOptionDialog(null, "How would you like to sort your Exercises?", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				JOptionPane.showMessageDialog(null, SortSearch.sortingMethod(exercises, "Type"));
+				if(exercises.size() > 30 ) {
+					String longMessage = SortSearch.sortingMethod(exercises, "Type");
+					textArea.setText(longMessage);
+				    textArea.setEditable(false);
+				    JScrollPane scrollPane = new JScrollPane(textArea);
+				    JOptionPane.showMessageDialog(null, scrollPane);
+				} else {
+					JOptionPane.showMessageDialog(null, SortSearch.sortingMethod(exercises, "Type"));
+				}
 				break;
 			case 1:
-				JOptionPane.showMessageDialog(null, SortSearch.sortingMethod(exercises, "Muscle Group"));
+				if(exercises.size() > 30 ) {
+					String longMessage2 = SortSearch.sortingMethod(exercises, "Type");
+					textArea.setText(longMessage2);
+				    textArea.setEditable(false);
+				    JScrollPane scrollPane2 = new JScrollPane(textArea);
+				    JOptionPane.showMessageDialog(null, scrollPane2);
+				} else {
+					JOptionPane.showMessageDialog(null, SortSearch.sortingMethod(exercises, "Muscle Group"));
+				}
 				break;
 			case 2:
 				exit = true;
@@ -277,7 +297,7 @@ public class Menu {
 		} while (!validInput);
 	}
 
-	private static void createExercise(User user, LinkedList<Exercise> exercises, Counter counter) {
+	private static void createExercise(User user, LinkedList<Exercise> exercises, Counter counter) throws HeadlessException, FileNotFoundException {
 		boolean exit = false;
 		int userType = -1;
 		int exerciseID = Integer.parseInt(FileSys.readLine(FileSys.PATH + FileSys.EXERCISE_ID));
@@ -294,7 +314,7 @@ public class Menu {
 			
 			//TODO add a check to make sure the description provided is not already in their system
 			if (option == JOptionPane.OK_OPTION) {
-				if(true) {	
+				if(!FileSys.isFoundInList(FileSys.EXERCISE_FILE, "Description: ", description.getText())) {	
 					if (!description.getText().isEmpty()) {
 						userDesc = description.getText();
 						userMuscle = Exercise.MUSCLE_GROUP[muscle.getSelectedIndex()];

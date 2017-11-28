@@ -57,3 +57,5 @@ Email: test@email.com, Type: Stretch, ID: 56, Description: New Exercise, Muscle 
 Email: test@email.com, Type: Stretch, ID: 57, Description: Test, Muscle Group: Chest, Instructions: Testing
 Email: test@email.com, Type: Cardiovascular, ID: 58, Description: Test, Muscle Group: Calves, Duration: 10, Setting: Treadmill
 Email: test@email.com, Type: WeightTraining, ID: 59, Description: Test, Muscle Group: Abs, Weight: 30, Reps: 15
+Email: a@e.co, Type: Stretch, ID: 60, Description: Test, Muscle Group: (Upper Back) Trapezius, Instructions: Test
+Email: test@email.com, Type: Stretch, ID: 61, Description: Testing, Muscle Group: (Top of Shoulders) Deltoids, Instructions: test
