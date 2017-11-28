@@ -295,7 +295,7 @@ public class Menu {
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			validInput = false;
 
-			//TODO the first and last name are not being displayed or set with the new user input. password too maybe
+			//TODO Write the change to the file
 			if (option == JOptionPane.OK_OPTION) {
 				//if (user.setEmail(new_email.getText())) {
 					if (user.setPassword(new_password.getText()) || new_password.getText().equals("")) {

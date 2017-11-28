@@ -34,6 +34,8 @@ public class ExerciseTest {
 		Stretch stretch = new Stretch();
 		WeightTraining training = new WeightTraining();
 		
+		
+		assertTrue(training.setReps(5));
 		//set values to cardio's fields and print toString()
 		assertEquals(cardio.setDescription("Test cardio exercise"), true);
 		cardio.setMuscle(8); //should choose "Triceps"
