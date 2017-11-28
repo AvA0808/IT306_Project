@@ -628,4 +628,14 @@ public class Menu {
 		return selection;
 	}
 	
+	
+	public static ArrayList<String> viewWorkouts(User user) throws FileNotFoundException {
+		Scanner scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.WORKOUT_FILE))));
+		try {
+			
+		}
+		catch( ) {
+			
+		}
+	}
 }

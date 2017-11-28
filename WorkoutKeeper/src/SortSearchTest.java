@@ -34,6 +34,9 @@ public class SortSearchTest {
 			 
 			//testing sortDuration()
 			System.out.println(SortSearch.sortingMethod(list, "Duration"));
+			
+			//testing searchDuration()
+			System.out.println(SortSearch.searchDuration(list, 53));
 		}
 		catch(FileNotFoundException e) {
 			e.printStackTrace();
