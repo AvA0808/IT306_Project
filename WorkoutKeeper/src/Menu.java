@@ -117,7 +117,7 @@ public class Menu {
 				if (Validate.isEmailInList(email.getText())) {
 					if (Validate.doesPasswordMatch(email.getText(), password.getText())) {
 						accessGranted = true;
-						createUser(user, email.getText());
+						createUserObject(user, email.getText());
 						status = "login";
 					} else {
 						JOptionPane.showMessageDialog(null, "The Password entered is not valid.\nTry again.");
@@ -135,10 +135,35 @@ public class Menu {
 		} while (!accessGranted);
 		return status;
 	}
-
-	private static void createUser(User user, String email) {
-		// TODO using the email passed in, read user file and build a user object from it, for the row that matches this email.
-		user.setEmail(email);
+	
+	/*
+	 * Create user object using input email, which will also be used to read user file to find record with the same email
+	 * @param
+	 * @return
+	 * @throws
+	 */
+	private static void createUserObject(User user, String email) throws FileNotFoundException {
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.USER_FILE))));
+			String nextLine;
+			//search for record with matching email
+			while(scanner.hasNextLine()) {
+				nextLine = scanner.nextLine();
+				//if matching, set the user object's fields using corresponding information from file record
+				if(FileSys.getSubString(nextLine, "Email: ").equalsIgnoreCase(email)) {
+					user.setEmail(email);
+					user.setFirstName(FileSys.getSubString(nextLine, "First Name: "));
+					user.setLastName(FileSys.getSubString(nextLine, "Last Name: "));
+					user.setPassword(FileSys.getSubString(nextLine, "Password: "));
+					break;
+				}
+			}
+			scanner.close();
+		}
+		catch(FileNotFoundException e) {
+			throw e;
+		}
 	}
 
 	public static <E> String loggedIn(User user, String status) throws FileNotFoundException {
@@ -251,8 +276,8 @@ public class Menu {
 
 	/*
 	 * Displays the profile sub-menu and processes user selections and inputs
-	 * @param
-	 * @return
+	 * @param user The logged-in user
+	 * @return boolean indicating successful update of user information or not?
 	 */
 	public static void profileSubMenu(User user) {
 		//instantiate the text field objects (not allowing new email)
@@ -642,8 +667,6 @@ public class Menu {
 		Exercise selection = (Exercise) array_exerc[randomInt];
 		return selection;
 	}
-	
-	//public static String viewWorkouts(User user)
 	
 	/*
 	 * Reads workout records from the workout database(text file) belonging to a single user and returns them in an array list
