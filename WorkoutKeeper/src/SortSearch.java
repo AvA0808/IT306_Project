@@ -141,6 +141,7 @@ public class SortSearch {
 			try {
 				scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.EXERCISE_FILE))));
 				//if no exception thrown, proceed to file reading
+				//TODO is showing all exercises. we should check the muscle types based on Exercise Linked list being passed in, not the whole file.
 				while(scanner.hasNextLine()) {
 					//grab the next line
 					String nextLine = scanner.nextLine();

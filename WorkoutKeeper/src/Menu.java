@@ -22,7 +22,7 @@ public class Menu {
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	static String welcomeScreen(String status, User user) throws FileNotFoundException, IOException {
+	public static String welcomeScreen(String status, User user) throws FileNotFoundException, IOException {
 		String[] options = { "Create Account", "Login", "Exit" };
 
 		switch (JOptionPane.showOptionDialog(null, "Welcome to the Workout Keeper App", "Workout Keeper",
@@ -100,7 +100,7 @@ public class Menu {
 	 * 
 	 * @return
 	 */
-	public static String login(User user, String status) throws HeadlessException, FileNotFoundException {
+	private static String login(User user, String status) throws HeadlessException, FileNotFoundException {
 		JTextField email = new JTextField();
 		JTextField password = new JPasswordField();
 		boolean accessGranted = false;
@@ -218,7 +218,15 @@ public class Menu {
 				sortExercise(exercises);
 				break;
 			case 2:
-				int duration = Integer.parseInt(JOptionPane.showInputDialog("Enter the Duration you would like to search for."));
+				int duration = 0;
+				do{
+					try{
+						duration = Integer.parseInt(JOptionPane.showInputDialog("Enter the Duration you would like to search for."));
+					}catch (NumberFormatException e) {
+						duration = 0;
+						JOptionPane.showMessageDialog(null, "The Duration cannot be empty");
+					}
+				}while(duration == 0);
 				JOptionPane.showMessageDialog(null, SortSearch.searchDuration(exercises, duration));
 				break;
 			case 3:
@@ -235,10 +243,10 @@ public class Menu {
 	private static void sortExercise(LinkedList<Exercise> exercises) throws HeadlessException, FileNotFoundException {
 		String[] options = { "Sort by Type", "Sort by Muscle Group", "Cancel" };
 		boolean exit = false;
-		
-		JTextArea textArea = new JTextArea(30, 80);
 	    		
 		do {
+			JTextArea textArea = new JTextArea(30, 80);
+			
 			switch (JOptionPane.showOptionDialog(null, "How would you like to sort your Exercises?", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
@@ -253,8 +261,9 @@ public class Menu {
 				}
 				break;
 			case 1:
+				//TODO Is sorting the entire file, not just the users exercises.
 				if(exercises.size() > 30 ) {
-					String longMessage2 = SortSearch.sortingMethod(exercises, "Type");
+					String longMessage2 = SortSearch.sortingMethod(exercises, "Muscle Group");
 					textArea.setText(longMessage2);
 				    textArea.setEditable(false);
 				    JScrollPane scrollPane2 = new JScrollPane(textArea);
@@ -279,7 +288,7 @@ public class Menu {
 	 * @param user The logged-in user
 	 * @return boolean indicating successful update of user information or not?
 	 */
-	public static void profileSubMenu(User user) {
+	private static void profileSubMenu(User user) {
 		//instantiate the text field objects (not allowing new email)
 		JTextField new_password = new JTextField();
 		JTextField new_firstName = new JTextField();
@@ -295,13 +304,13 @@ public class Menu {
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			validInput = false;
 
-			//TODO Write the change to the file
 			if (option == JOptionPane.OK_OPTION) {
 				//if (user.setEmail(new_email.getText())) {
 					if (user.setPassword(new_password.getText()) || new_password.getText().equals("")) {
 						if (user.setFirstName(new_firstName.getText()) || new_firstName.getText().equals("")) {
 							if (user.setLastName(new_lastName.getText()) || new_lastName.getText().equals("")) {
 								validInput = true;
+								//TODO Remove this and Write the change to the file
 								System.out.println("New record: " + user.getEmail() + ", " + user.getPassword() + ", " + user.getFirstName() + ", " + user.getLastName());
 							} else {
 								JOptionPane.showMessageDialog(null, "The Last Name entered is not valid.\nTry again.");
@@ -490,6 +499,8 @@ public class Menu {
 		boolean exit = false;
 		
 		do {
+			JTextArea textArea = new JTextArea(30, 80);
+			
 			switch (JOptionPane.showOptionDialog(null, "My Workouts Sub-Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
@@ -499,7 +510,16 @@ public class Menu {
 				createWorkout(user, exercises, Validate.canMakeWorkout(counter));
 				break;
 			case 2:
-				//TODO viewWorkouts();
+				//TODO viewWorkouts(user);
+				if(exercises.size() > 30 ) {
+					String longMessage = getUserWorkouts(user);
+					textArea.setText(longMessage);
+				    textArea.setEditable(false);
+				    JScrollPane scrollPane = new JScrollPane(textArea);
+				    JOptionPane.showMessageDialog(null, scrollPane);
+				} else {
+					JOptionPane.showMessageDialog(null, getUserWorkouts(user));
+				}
 				break;
 			case 3:
 				exit = true;
@@ -672,27 +692,66 @@ public class Menu {
 	 * @param
 	 * @return
 	 */
-	public static ArrayList<String> readWorkouts(User user) throws FileNotFoundException {
-		ArrayList<String> list = new ArrayList<String>();
-		Scanner scanner = null;
+	private static String getUserWorkouts(User user) throws FileNotFoundException {
+		String userWorkouts = "Workouts for user: " + user.getEmail();
+		Scanner workoutFile = null;
+		Scanner exerciseFile = null;
 		try {
-			scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.WORKOUT_FILE))));
+			workoutFile = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.WORKOUT_FILE))));
+			
 			//if no exception thrown, proceed to file reading
-			String nextLine = "";
+			String workoutLine = "";
+			String exerciseLine = "";
 			//keep iterating while there are more records to read
-			while(scanner.hasNextLine()) {
+			while(workoutFile.hasNextLine()) {
 				//grab next record
-				nextLine = scanner.nextLine();
+				workoutLine = workoutFile.nextLine();
 				//add to array list if it belongs to the input user
-				if(FileSys.getSubString(nextLine, "Email: ").equals(user.getEmail())) {
-					list.add(nextLine);
+				if(FileSys.getSubString(workoutLine, "Email: ").equals(user.getEmail())) {
+					//int workoutID = Integer.parseInt(FileSys.getSubString(workoutLine, "Workout ID: "));
+					userWorkouts += "\n\nWorkout ID: " + FileSys.getSubString(workoutLine, "Workout ID: ");
+					boolean stretchHeader = false, cardioHeader = false, weightHeader = false;
+					for(int i = 1; i <= 9; i++) {
+						boolean IDfound = false;
+						exerciseFile = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.EXERCISE_FILE))));
+						while(exerciseFile.hasNextLine() && !IDfound) {
+							//Get the exercise ID from the line for this user in the workout file
+							String exerciseID = FileSys.getSubString(workoutLine, "Exercise #" + i + " ID: ");
+							exerciseLine = exerciseFile.nextLine();
+							if(FileSys.getSubString(exerciseLine, "ID: ").equals(exerciseID)) {
+								if(FileSys.getSubString(exerciseLine, "Type: ").equals(Exercise.EXERCISE_TYPE[0])) {
+									if(!stretchHeader) {
+										userWorkouts += "\n" + FileSys.getSubString(exerciseLine, "Type: ") + " Exercises:";
+										stretchHeader = true;
+									}
+								}
+								if(FileSys.getSubString(exerciseLine, "Type: ").equals(Exercise.EXERCISE_TYPE[1])) {
+									if(!cardioHeader) {
+										userWorkouts += "\n" + FileSys.getSubString(exerciseLine, "Type: ") + " Exercises:";
+										cardioHeader = true;
+									}
+								}
+								if(FileSys.getSubString(exerciseLine, "Type: ").equals(Exercise.EXERCISE_TYPE[2])) {
+									if(!weightHeader) {
+										userWorkouts += "\n" + FileSys.getSubString(exerciseLine, "Type: ") + " Exercises:";
+										weightHeader = true;
+									}
+								}
+								//userWorkouts += "\nExercise Type: " + FileSys.getSubString(exerciseLine, "Type: ");
+								userWorkouts += "\n\t" + FileSys.getSubString(exerciseLine, "Description: ");
+								IDfound = true;
+							}								
+						}
+						exerciseFile.close();
+					}
 				}
 			}
 		}
 		catch(FileNotFoundException e) {
 			throw e;
 		}
-		scanner.close();
-		return list;
+		workoutFile.close();
+		
+		return userWorkouts;
 	}
 }
