@@ -380,7 +380,7 @@ public class Menu {
 	 * @param user The logged-in user
 	 * @return boolean indicating successful update of user information or not?
 	 */
-	public static void profileSubMenu(User user) throws FileNotFoundException {
+	private static void profileSubMenu(User user) throws FileNotFoundException {
 		//instantiate the text field objects (not allowing new email)
 		JTextField new_password = new JTextField();
 		JTextField new_firstName = new JTextField();
@@ -388,7 +388,7 @@ public class Menu {
 
 		boolean validInput;
 		//instantiate what will be displayed in the dialog box
-		Object[] inputFields = { "*Leave text field(s) empty if no change desired", "Email: " + user.getEmail(), "Password:", new_password, "First Name: " + user.getFirstName(), new_firstName, "Last Name: " + user.getLastName(),
+		Object[] inputFields = { "*Leave text field(s) empty if no change desired\n", "Email: " + user.getEmail(), "Password:", new_password, "First Name: " + user.getFirstName(), new_firstName, "Last Name: " + user.getLastName(),
 				new_lastName };
 		//validate entries into text boxes
 		do {
@@ -401,7 +401,7 @@ public class Menu {
 						if (user.setFirstName(new_firstName.getText()) || new_firstName.getText().equals("")) {
 							if (user.setLastName(new_lastName.getText()) || new_lastName.getText().equals("")) {
 								//by this point in runtime, user object already contains updated fields
-								System.out.println("New record based on user fields: First Name: " + user.getFirstName() + ", Last Name: " + user.getLastName() + ", Email: " + user.getEmail() + ", Password: " + user.getPassword() + "\n\n");
+								//System.out.println("New record based on user fields: First Name: " + user.getFirstName() + ", Last Name: " + user.getLastName() + ", Email: " + user.getEmail() + ", Password: " + user.getPassword() + "\n\n");
 								validInput = true;
 							} else {
 								JOptionPane.showMessageDialog(null, "The Last Name entered is not valid.\nTry again.");
@@ -440,14 +440,14 @@ public class Menu {
 				String nextLine = scanner.nextLine();
 				//if the next line contains the old record, insert new record into new file String instead of it
 				if(FileSys.getSubString(nextLine, "Email: ").equalsIgnoreCase(user.getEmail())) {
-					System.out.println("EMAIL MATCHED: \n");
+					//System.out.println("EMAIL MATCHED: \n");
 					nextLine = "First Name: " + user.getFirstName() + ", Last Name: " + user.getLastName() + ", Email: " + user.getEmail() + ", Password: " + user.getPassword();
 				}
 				newFile += nextLine + "\n";
 			}
 			scanner.close();
 			//test output of variable
-			System.out.println("NEW USER.TXT FILE CONTENTS:\n\n" + newFile);
+			//System.out.println("NEW USER.TXT FILE CONTENTS:\n\n" + newFile);
 			
 			//overwrite the old file contents
 			PrintWriter writer = new PrintWriter(new FileOutputStream(new File(FileSys.PATH + FileSys.USER_FILE)), false);
