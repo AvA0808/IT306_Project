@@ -284,11 +284,11 @@ public class Menu {
 	}
 
 	/*
-	 * Displays the profile sub-menu and processes user selections and inputs
+	 * Displays the profile sub-menu for logged-in user, and processes user selections and inputs to update their profile
 	 * @param user The logged-in user
 	 * @return boolean indicating successful update of user information or not?
 	 */
-	private static void profileSubMenu(User user) {
+	public static void profileSubMenu(User user) throws FileNotFoundException {
 		//instantiate the text field objects (not allowing new email)
 		JTextField new_password = new JTextField();
 		JTextField new_firstName = new JTextField();
@@ -305,13 +305,12 @@ public class Menu {
 			validInput = false;
 
 			if (option == JOptionPane.OK_OPTION) {
-				//if (user.setEmail(new_email.getText())) {
 					if (user.setPassword(new_password.getText()) || new_password.getText().equals("")) {
 						if (user.setFirstName(new_firstName.getText()) || new_firstName.getText().equals("")) {
 							if (user.setLastName(new_lastName.getText()) || new_lastName.getText().equals("")) {
+								//by this point in runtime, user object already contains updated fields
+								System.out.println("New record based on user fields: First Name: " + user.getFirstName() + ", Last Name: " + user.getLastName() + ", Email: " + user.getEmail() + ", Password: " + user.getPassword() + "\n\n");
 								validInput = true;
-								//TODO Remove this and Write the change to the file
-								System.out.println("New record: " + user.getEmail() + ", " + user.getPassword() + ", " + user.getFirstName() + ", " + user.getLastName());
 							} else {
 								JOptionPane.showMessageDialog(null, "The Last Name entered is not valid.\nTry again.");
 							}
@@ -322,13 +321,50 @@ public class Menu {
 						JOptionPane.showMessageDialog(null,
 								"The Password entered is not valid.\nIt must contain at least 8 characters, at least 1 upper case and 1 lower case, and at least 4 numbers\nTry again.");
 					}
-				/*} else {
-					JOptionPane.showMessageDialog(null, "The Email entered is not a valid email.\nTry again.");
-				}*/
 			} else {
 				validInput = true;
 			}
 		} while (!validInput);
+		
+		//if changes were made, overwrite old record; if no changes, old record remains in the user database and within user object fields
+		if(!new_password.getText().equals("") || !new_firstName.getText().equals("") || !new_lastName.getText().equals("")) {
+			//pass in the updated user object
+			rewriteUserRecord(user);
+		}
+	}
+	
+	/*
+	 * Rewrites the logged-in user's record in the user database if there has been a change in their information
+	 * @param user The updated user object (email can not be changed)
+	 */
+	private static void rewriteUserRecord(User user) throws FileNotFoundException {
+		//meant to hold new file contents that include new record
+		String newFile = "";
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.USER_FILE))));
+			//if no exception thrown, proceed: read entire file into a String
+			while(scanner.hasNextLine()) {
+				String nextLine = scanner.nextLine();
+				//if the next line contains the old record, insert new record into new file String instead of it
+				if(FileSys.getSubString(nextLine, "Email: ").equalsIgnoreCase(user.getEmail())) {
+					System.out.println("EMAIL MATCHED: \n");
+					nextLine = "First Name: " + user.getFirstName() + ", Last Name: " + user.getLastName() + ", Email: " + user.getEmail() + ", Password: " + user.getPassword();
+				}
+				newFile += nextLine + "\n";
+			}
+			scanner.close();
+			//test output of variable
+			System.out.println("NEW USER.TXT FILE CONTENTS:\n\n" + newFile);
+			
+			//overwrite the old file contents
+			PrintWriter writer = new PrintWriter(new FileOutputStream(new File(FileSys.PATH + FileSys.USER_FILE)), false);
+			writer.write(newFile);
+			writer.close();
+		}
+		catch(FileNotFoundException e) {
+			throw e;
+		}
 	}
 
 	private static void createExercise(User user, LinkedList<Exercise> exercises, Counter counter) throws HeadlessException, FileNotFoundException {

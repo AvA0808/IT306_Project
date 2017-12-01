@@ -1,4 +1,6 @@
 
+import java.io.FileNotFoundException;
+
 import org.junit.Test;
 
 /**
@@ -10,8 +12,13 @@ public class MenuTest {
 
 	@Test
 	public void test() {
-		User user = new User("Abraham", "van Helsing", "ahelsing@email.com", "1234ABcde");
-		Menu.profileSubMenu(user);
+		User user = new User("Far", "Bys", "farbys@example.com", "UPPERlower1234");
+		try {
+			Menu.profileSubMenu(user); //profileSubMenu() works, but what about rewriteUserRecord()?
+		}
+		catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

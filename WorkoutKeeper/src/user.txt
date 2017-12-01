@@ -7,5 +7,5 @@ First Name: test, Last Name: new, Email: Testnew@email.com, Password: 1234ABcde
 First Name: A, Last Name: B, Email: test4@email.com, Password: 1234ABcde
 First Name: A, Last Name: B, Email: Test5@email.com, Password: 1234ABcde
 First Name: A, Last Name: B, Email: test6@email.com, Password: 1234ABcde
-First Name: Far, Last Name: Bys, Email: farbys@example.com, Password: UPPERlower1234
+First Name: Middle, Last Name: Passer, Email: farbys@example.com, Password: lowerUPPER0987
 First Name: A, Last Name: B, Email: test7@email.com, Password: 1234ABcde
