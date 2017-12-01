@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -153,5 +154,90 @@ public class FileSys {
 		}
 		scanner.close();
 		return found;
+	}
+	
+	/* 
+	   * Reads workout records from the workout database(text file) belonging to a single user and returns them in an array list 
+	   * @param 
+	   * @return 
+	   */ 
+	  public static ArrayList<String> readWorkouts(User user) throws FileNotFoundException { 
+	    ArrayList<String> list = new ArrayList<String>(); 
+	    Scanner scanner = null; 
+	    try {
+	      scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.WORKOUT_FILE)))); 
+	      //if no exception thrown, proceed to file reading 
+	      String nextLine = ""; 
+	      //keep iterating while there are more records to read 
+	      while(scanner.hasNextLine()) { 
+	        //grab next record 
+	        nextLine = scanner.nextLine(); 
+	        //add to array list if it belongs to the input user 
+	        if(FileSys.getSubString(nextLine, "Email: ").equals(user.getEmail())) { 
+	          list.add(nextLine); 
+	        } 
+	      } 
+	    } 
+	    catch(FileNotFoundException e) { 
+	      throw e; 
+	    } 
+	    scanner.close();
+	    return list; 
+	  }
+	  
+	  /* 
+	   * Reads User records from the User database(text file) and returns all emails in an array list 
+	   * @param 
+	   * @return 
+	   */ 
+	  public static ArrayList<String> getAllEmails() throws FileNotFoundException { 
+	    ArrayList<String> list = new ArrayList<String>(); 
+	    Scanner scanner = null; 
+	    try {
+	      scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.USER_FILE)))); 
+	      //if no exception thrown, proceed to file reading 
+	      String nextLine = ""; 
+	      //keep iterating while there are more records to read 
+	      while(scanner.hasNextLine()) { 
+	        //grab next record 
+	        nextLine = scanner.nextLine(); 
+	        //add to array list if it belongs to the input user  
+	        list.add(FileSys.getSubString(nextLine, "Email: ")); 
+	      } 
+	    } 
+	    catch(FileNotFoundException e) { 
+	      throw e; 
+	    } 
+	    scanner.close();
+	    return list; 
+	  }
+
+	public static String findInShared(String userEmail, String searchValue) throws FileNotFoundException {
+		String list = ""; 
+	    Scanner scanner = null; 
+	    try {
+	      scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.SHARED_FILE)))); 
+	      //if no exception thrown, proceed to file reading 
+	      String nextLine = ""; 
+	      //keep iterating while there are more records to read 
+	      while(scanner.hasNextLine()) { 
+	        //grab next record 
+	        nextLine = scanner.nextLine();
+	        String foundInLine = FileSys.getSubString(nextLine, searchValue);
+	        
+	        if(foundInLine.equalsIgnoreCase(userEmail)) {
+	        	list += "\n" + nextLine; 
+	        }
+	      }
+	      
+	      if(list == "") {
+	    	  list = "None";
+	      }
+	    } 
+	    catch(FileNotFoundException e) { 
+	      throw e; 
+	    } 
+	    scanner.close();
+	    return list; 
 	}
 }

@@ -165,7 +165,7 @@ public class Menu {
 		}
 	}
 
-	public static <E> String loggedIn(User user, String status) throws FileNotFoundException {
+	public static <E> String loggedIn(User user, String status) throws IOException {
 		String[] options = { "Exercise", "My Workouts", "Shared Workouts", "My Profile", "Logout" };
 		boolean exit = false;
 		Counter counter = new Counter();
@@ -185,7 +185,7 @@ public class Menu {
 				workoutSubMenu(user, exercises, counter);
 				break;
 			case 2:
-				// TODO sharedWorkouts(user);
+				sharedWorkoutsSubMenu(user);
 				break;
 			case 3:
 				profileSubMenu(user);
@@ -202,6 +202,98 @@ public class Menu {
 		} while (!exit);
 
 		return status;
+	}
+
+	private static void sharedWorkoutsSubMenu(User user) throws FileNotFoundException, IOException {
+		String[] options = { "Share a Workout", "Shared With Me", "Workouts I Shared", "Return" };
+		boolean exit = false;
+		
+		do {
+			JTextArea textArea = new JTextArea(30, 80);
+			
+			switch (JOptionPane.showOptionDialog(null, "Shared Workouts Sub-Menu", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
+			case 0:
+				shareWorkout(user);
+				break;
+			case 1:
+				String longMessage = "Workouts shared with me:\n\n";
+				longMessage += FileSys.findInShared(user.getEmail(), "Receiver Email: ");
+				if(longMessage.split("\r\n|\r|\n").length > 30 ) {
+					textArea.setText(longMessage);
+				    textArea.setEditable(false);
+				    JScrollPane scrollPane = new JScrollPane(textArea);
+				    JOptionPane.showMessageDialog(null, scrollPane);
+				} else {
+					JOptionPane.showMessageDialog(null, longMessage);
+				}
+				break;
+			case 2:
+				String longMSG = "Workouts I have Shared:\n\n";
+				longMSG += FileSys.findInShared(user.getEmail(), "Sharer Email: ");
+				if(longMSG.split("\r\n|\r|\n").length > 30 ) {
+					textArea.setText(longMSG);
+				    textArea.setEditable(false);
+				    JScrollPane scrollPane = new JScrollPane(textArea);
+				    JOptionPane.showMessageDialog(null, scrollPane);
+				} else {
+					JOptionPane.showMessageDialog(null, longMSG);
+				}
+				break;
+			case 3:
+				exit = true;
+				break;
+			default:
+				exit = true;
+				JOptionPane.showMessageDialog(null, "No Option Selected.");
+				break;
+			}
+		} while (!exit);
+	}
+
+	private static void shareWorkout(User user) throws FileNotFoundException, IOException {
+		boolean exit = false;
+		String msg = "Select a workout you want to share, and select the person you want to share it with.";
+		Object[] fileWorkouts = FileSys.readWorkouts(user).toArray();
+		//fileWorkouts = removeSharedWorkouts
+		Object[] fileEmails = FileSys.getAllEmails().toArray();
+		
+		JComboBox<?> workouts = new JComboBox<Object>(fileWorkouts);
+		JComboBox<?> emails = new JComboBox<Object>(fileEmails);
+		Object[] inputFields = { msg, "Your Workouts:", workouts, "User to Share with:", emails };
+	
+		if(fileWorkouts.length == 0) {
+			JOptionPane.showMessageDialog(null, "You do not have any workouts to share.");
+		} else {
+			do {
+				int option = JOptionPane.showConfirmDialog(null, inputFields, "Create New Exercise",
+						JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+				
+				if (option == JOptionPane.OK_OPTION) {
+					String newLine = "Sharer Email: " + user.getEmail();
+					newLine += ", Workout ID Shared: " + findInArray(fileWorkouts, workouts.getSelectedIndex(), "Workout ID: ");
+					newLine += ", Receiver Email: " + fileEmails[emails.getSelectedIndex()];
+					FileSys.append(FileSys.SHARED_FILE, newLine);
+					exit = true;
+				} else {
+					exit = true;
+				}
+			} while (!exit);
+		}
+	}
+
+	private static String findInArray(Object[] list, int selectedIndex, String searchValue) {
+		String readLine = (String) list[selectedIndex];
+		String findValue = readLine.substring(readLine.indexOf(searchValue), readLine.length());
+
+		if (findValue.indexOf(",") == -1) {
+			findValue = findValue.substring(0, findValue.length());
+		} else {
+			findValue = findValue.substring(0, findValue.indexOf(","));
+		}
+
+		findValue = findValue.substring(findValue.indexOf(':') + 1, findValue.length());
+		return findValue.trim();
 	}
 
 	private static void exerciseSubMenu(User user, LinkedList<Exercise> exercises, Counter counter) throws HeadlessException, FileNotFoundException {
@@ -546,7 +638,6 @@ public class Menu {
 				createWorkout(user, exercises, Validate.canMakeWorkout(counter));
 				break;
 			case 2:
-				//TODO viewWorkouts(user);
 				if(exercises.size() > 30 ) {
 					String longMessage = getUserWorkouts(user);
 					textArea.setText(longMessage);
