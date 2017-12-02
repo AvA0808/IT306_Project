@@ -253,33 +253,70 @@ public class Menu {
 
 	private static void shareWorkout(User user) throws FileNotFoundException, IOException {
 		boolean exit = false;
-		String msg = "Select a workout you want to share, and select the person you want to share it with.";
 		Object[] fileWorkouts = FileSys.readWorkouts(user).toArray();
 		//fileWorkouts = removeSharedWorkouts
 		Object[] fileEmails = FileSys.getAllEmails().toArray();
 		
-		JComboBox<?> workouts = new JComboBox<Object>(fileWorkouts);
 		JComboBox<?> emails = new JComboBox<Object>(fileEmails);
-		Object[] inputFields = { msg, "Your Workouts:", workouts, "User to Share with:", emails };
-	
+		Object[] getEmail = { "Select the person you want to share a workout with:" ,"User Email:", emails, };
+		
 		if(fileWorkouts.length == 0) {
 			JOptionPane.showMessageDialog(null, "You do not have any workouts to share.");
 		} else {
 			do {
-				int option = JOptionPane.showConfirmDialog(null, inputFields, "Create New Exercise",
+				int option = JOptionPane.showConfirmDialog(null, getEmail, "Create New Exercise",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 				
 				if (option == JOptionPane.OK_OPTION) {
-					String newLine = "Sharer Email: " + user.getEmail();
-					newLine += ", Workout ID Shared: " + findInArray(fileWorkouts, workouts.getSelectedIndex(), "Workout ID: ");
-					newLine += ", Receiver Email: " + fileEmails[emails.getSelectedIndex()];
-					FileSys.append(FileSys.SHARED_FILE, newLine);
-					exit = true;
+					String shareWithEmail = (String) fileEmails[emails.getSelectedIndex()];
+					
+					fileWorkouts = removeSharedWorkouts(user, shareWithEmail, fileWorkouts);
+					JComboBox<?> workouts = new JComboBox<Object>(fileWorkouts);
+					Object[] getWorkout = { "Select the workout you want to share with " + fileEmails[emails.getSelectedIndex()] + ":" ,"Workout:", workouts};
+					
+					do {
+						int option2 = JOptionPane.showConfirmDialog(null, getWorkout, "Create New Exercise",
+								JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+						
+						if (option2 == JOptionPane.OK_OPTION) {
+							String newLine = "Sharer Email: " + user.getEmail();
+							newLine += ", Workout ID Shared: " + findInArray(fileWorkouts, workouts.getSelectedIndex(), "Workout ID: ");
+							newLine += ", Receiver Email: " + shareWithEmail;
+							FileSys.append(FileSys.SHARED_FILE, newLine);
+							JOptionPane.showMessageDialog(null, "You have successfully shared the workout.");
+							exit = true;
+						} else {
+							exit = true;
+						}
+					} while (!exit);
 				} else {
 					exit = true;
 				}
 			} while (!exit);
 		}
+	}
+
+	private static Object[] removeSharedWorkouts(User user, String shareWithEmail, Object[] fileWorkouts) throws FileNotFoundException {
+		//TODO
+	    Scanner scanner = null; 
+	    try {
+	      scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.SHARED_FILE)))); 
+	      //if no exception thrown, proceed to file reading 
+	      String nextLine = ""; 
+	      //keep iterating while there are more records to read 
+	      while(scanner.hasNextLine()) { 
+	        //grab next record 
+	        nextLine = scanner.nextLine();
+	        if(nextLine.contains(user.getEmail())) {
+	        	//if()
+	        }
+	      }
+	    } 
+	    catch(FileNotFoundException e) { 
+	      throw e; 
+	    } 
+	    scanner.close();
+		return fileWorkouts;
 	}
 
 	private static String findInArray(Object[] list, int selectedIndex, String searchValue) {
@@ -333,7 +370,7 @@ public class Menu {
 	}
 	
 	private static void sortExercise(LinkedList<Exercise> exercises) throws HeadlessException, FileNotFoundException {
-		String[] options = { "Sort by Type", "Sort by Muscle Group", "Cancel" };
+		String[] options = { "Sort by Type", "Sort by Muscle Group", "Sort by Duration", "Cancel" };
 		boolean exit = false;
 	    		
 		do {
@@ -366,6 +403,9 @@ public class Menu {
 				break;
 			case 2:
 				exit = true;
+				break;
+			case 3:
+				//TODO sortByDuration();
 				break;
 			default:
 				exit = true;
