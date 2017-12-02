@@ -97,11 +97,11 @@ public class SortSearch {
 	
 	/*
 	 * Sorts the exercises stored in the input linked list based on input sorting method
-	 * @param 
-	 * @param
+	 * @param list A linked list containing all of the user's exercises
+	 * @param howSort The sorting method as a String (type, muscle group, duration)
 	 * @return display String made by concatenating toString() returns of appropriate exercise objects
 	 */
-	public static String sortingMethod(LinkedList<Exercise> list, String howSort) throws FileNotFoundException {
+	public static String sortingMethod(LinkedList<Exercise> list, String howSort) {
 		String display = "";
 		//for ease of sorting, turn linked list into array (length is 1 more than last element index)
 		Object[] array_exerc = list.toArray();
@@ -135,8 +135,47 @@ public class SortSearch {
 			for(int x = 0; x < Exercise.MUSCLE_GROUP.length; x++) {
 				list_muscle.add(new LinkedList<String>());
 			}
+			//iterate through input linked list, which contains all exercises belonging to the logged-in user
+			Iterator it = list.iterator();
+			while(it.hasNext()) {
+				//grab the next exercise in the list
+				Exercise current = (Exercise)it.next();
+				//check what muscle group it belongs to
+				for(int i = 0; i < Exercise.MUSCLE_GROUP.length; i++) {
+					//place it in appropriate bucket
+					if(current.getMuscle().equalsIgnoreCase(Exercise.MUSCLE_GROUP[i])) {
+						//safe to downcast to specific exercise type
+						if(current instanceof Cardiovascular) {
+							Cardiovascular cardio = (Cardiovascular)current;
+							list_muscle.get(i).add(cardio.toString());
+						}
+						else if(current instanceof Stretch) {
+							Stretch stretch = (Stretch)current;
+							list_muscle.get(i).add(stretch.toString());
+						}
+						else if(current instanceof WeightTraining) {
+							WeightTraining training = (WeightTraining)current;
+							list_muscle.get(i).add(training.toString());
+						}
+						break;
+					}
+				}
+			}
 			
-			//open the proper file to read the exercises from (more efficient than downcasting from input list)
+			//once input list is finished being processed, proceed to concatenate all toString() to display
+			for(int x = 0; x < list_muscle.size(); x++) {
+				if(!list_muscle.get(x).isEmpty()) {
+					//for each bucket, iterate through if not empty
+					Iterator it_2 = list_muscle.get(x).iterator();
+					while(it_2.hasNext()) {
+						//concatenate each toString to display
+						display += (String)it_2.next() + "\n";
+					}
+					display += "\n";
+				}
+			}
+			
+			/*open the proper file to read the exercises from (more efficient than downcasting from input list)
 			Scanner scanner = null;
 			try {
 				scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.EXERCISE_FILE))));
@@ -181,7 +220,7 @@ public class SortSearch {
 			}
 			catch(FileNotFoundException e) {
 				throw e;
-			}
+			}*/
 		}
 		//only sorts cardio exercises based on duration
 		else if(howSort.equalsIgnoreCase("Duration")) {
