@@ -1,7 +1,7 @@
 /**
  * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
  * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
- * 
+ * This class represents a user once they have logged into the program.
  */
 public class User {
 	// none of these fields can be null
@@ -29,8 +29,10 @@ public class User {
 	}
 
 	/**
+	 * Validates and sets the first name
 	 * @param firstName
 	 *            the firstName to set
+	 * @return boolean indicating whether the first name was successfully set or not.
 	 */
 	public boolean setFirstName(String firstName) {
 		if (firstName.equals("")) {
@@ -49,8 +51,10 @@ public class User {
 	}
 
 	/**
+	 * Validates and sets the last name
 	 * @param lastName
 	 *            the lastName to set
+	 * @return boolean indicating whether the last name was successfully set or not.
 	 */
 	public boolean setLastName(String lastName) {
 		if (lastName.equals("")) {
@@ -71,7 +75,6 @@ public class User {
 	/**
 	 * Validates and sets the email address of the user. Valid email format:
 	 * [username]@[domain].[extension]
-	 * 
 	 * @param email
 	 *            the email to set
 	 * @return boolean indicating whether the email has been set or not
@@ -121,9 +124,9 @@ public class User {
 	/**
 	 * Validates and sets the password of the user. Valid password contains: at
 	 * least 4 digits, at least 9 characters in total
-	 * 
 	 * @param password
-	 *            the password to set return boolean indicating whether the
+	 *            the password to set 
+	 * @return boolean indicating whether the
 	 *            password has been set or not
 	 */
 	public boolean setPassword(String password) {
@@ -159,7 +162,8 @@ public class User {
 		return valid;
 	}
 
-	/* Prepares a record of the user's information and returns it */
+	/* Prepares a record of the user's information and returns it
+	 * @return String representation of the user object */
 	public String toString() {
 		return ("First Name: " + this.firstName + ", Last Name: " + this.lastName + ", Email: " + this.email
 				+ ", Password: " + this.password);

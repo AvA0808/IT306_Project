@@ -4,7 +4,7 @@ import java.util.*;
 /**
  * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
  * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
- * 
+ * This class contains methods that handle searching and sorting tasks accomplished throughout the program.
  */
 public class SortSearch {	
 	/*
@@ -45,6 +45,7 @@ public class SortSearch {
 	/*
 	 * Creates the appropriate exercise object (Cardiovascular, Stretch, WeightTraining) and returns it
 	 * @param record The String line to parse for object fields
+	 * @counter A counter to keep track of number of exercise objects instantiated
 	 * @return exercise The exercise object created from the input record
 	 */
 	public static Exercise createExerciseFromFile(String record, Counter counter) {
@@ -174,53 +175,6 @@ public class SortSearch {
 					display += "\n";
 				}
 			}
-			
-			/*open the proper file to read the exercises from (more efficient than downcasting from input list)
-			Scanner scanner = null;
-			try {
-				scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.EXERCISE_FILE))));
-				//if no exception thrown, proceed to file reading
-				//TODO is showing all exercises. we should check the muscle types based on Exercise Linked list being passed in, not the whole file.
-				while(scanner.hasNextLine()) {
-					//grab the next line
-					String nextLine = scanner.nextLine();
-					//discard the email portion
-					nextLine = nextLine.substring(nextLine.indexOf("Type: "));
-					//grab the muscle group listed in that line
-					String current_muscle = FileSys.getSubString(nextLine, "Muscle Group: ");
-					//check which bucket muscle group belongs in
-					boolean exit = false;
-					int x = 0;
-					while(!exit && x < Exercise.MUSCLE_GROUP.length) {
-						if(current_muscle.equalsIgnoreCase(Exercise.MUSCLE_GROUP[x])) {
-							//add record to the corresponding bucket
-							list_muscle.get(x).add(nextLine);
-							exit = true;
-						}
-						x++;
-					}
-				}
-				scanner.close();
-				
-				//loop through every single cell in the array list
-				for(int y = 0; y < list_muscle.size(); y++) {
-					//within every cell, iterate through the linked list if not empty
-					if(!list_muscle.get(y).isEmpty()) {
-						Iterator<?> it = list_muscle.get(y).iterator();
-						while(it.hasNext()) {
-							//grab the next record as a String
-							String current = (String)it.next();
-							//concatenate it to variable we are going to return
-							display += current + "\n";
-						}
-						//add an extra line between muscle groups in display
-						display += "\n";
-					}
-				}
-			}
-			catch(FileNotFoundException e) {
-				throw e;
-			}*/
 		}
 		//only sorts cardio exercises based on duration
 		else if(howSort.equalsIgnoreCase("Duration")) {
@@ -263,9 +217,9 @@ public class SortSearch {
 	
 	/*
 	 * Returns a linked list (sublist of input linked list) of a specific type of exercise
-	 * @param
-	 * @param
-	 * @return
+	 * @param list A linked list of all of the logged-in user's exercises
+	 * @param type The type of exercises to filter out
+	 * @return subList A sublist of the input list containing a specific type of exercise
 	 */
 	public static LinkedList<Exercise> returnTypeList(LinkedList<Exercise> list, String type) {
 		LinkedList<Exercise> subList = new LinkedList<Exercise>();
@@ -282,9 +236,9 @@ public class SortSearch {
 	
 	/*
 	 * Searches the cardiovascular exercises belonging to the user based on a input duration
-	 * @param
-	 * @param
-	 * @return
+	 * @param list A linked list of all of the logged-in user's exercises
+	 * @param duration The input duration to search for
+	 * @return display The display of results by concatenating the toString() of all applicable exercises
 	 */
 	public static String searchDuration(LinkedList<Exercise> list, int duration) {
 		String display = "SEARCH BY DURATION RESULTS\n\n";

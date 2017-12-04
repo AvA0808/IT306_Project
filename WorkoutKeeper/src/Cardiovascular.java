@@ -1,7 +1,7 @@
 /**
  * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
  * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
- * 
+ * This class represents a cardiovascular type of exercise.
  */
 public class Cardiovascular extends Exercise {
 	// number of minutes the exercise will be performed for
@@ -35,11 +35,8 @@ public class Cardiovascular extends Exercise {
 
 	/**
 	 * Validates and sets the duration (minutes).
-	 * 
-	 * @param duration
-	 *            the duration to set
-	 * @return boolean true indicating that the duration was successfully set
-	 * @throws IllegalArgumentException
+	 * @param duration the duration to set
+	 * @return boolean indicating whether the duration was successfully set or not
 	 */
 	public boolean setDuration(int duration) {
 		if (duration <= 0) {
@@ -59,9 +56,7 @@ public class Cardiovascular extends Exercise {
 
 	/**
 	 * Validates and sets the setting.
-	 * 
-	 * @param setting
-	 *            the setting to set
+	 * @param setting the setting to set
 	 * @return boolean indicating whether the setting was successfully set or
 	 *         not
 	 */
@@ -77,6 +72,7 @@ public class Cardiovascular extends Exercise {
 	/*
 	 * Prepares a record of the cardiovascular exercise's information and
 	 * returns it
+	 * @return Display containing the cardio exercise's information
 	 */
 	public String toString() {
 		return ("Type: " + this.getClass().getName() + ", " + super.toString() + "Duration: " + this.duration
