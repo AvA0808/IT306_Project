@@ -451,6 +451,12 @@ public class Menu {
 			case 2:
 				if(exercises.size() == 0) {
 					JOptionPane.showMessageDialog(null, "You do not have any Exercises.");
+				} else if(exercises.size() > 30 ) {
+					String longMessage3 = SortSearch.sortDuration(exercises);
+					textArea.setText(longMessage3);
+				    textArea.setEditable(false);
+				    JScrollPane scrollPane2 = new JScrollPane(textArea);
+				    JOptionPane.showMessageDialog(null, scrollPane2);
 				} else {
 					JOptionPane.showMessageDialog(null, SortSearch.sortDuration(exercises));
 				}

@@ -12,3 +12,4 @@ First Name: A, Last Name: B, Email: test7@email.com, Password: 1234ABcde
 First Name: A, Last Name: B, Email: test8@email.com, Password: 1234ABcde
 First Name: A, Last Name: C, Email: test9@email.com, Password: 1234ABcde
 First Name: C, Last Name: D, Email: test10@email.com, Password: 4321ABcde
+First Name: C, Last Name: D, Email: test11@email.com, Password: 1234ABCde
