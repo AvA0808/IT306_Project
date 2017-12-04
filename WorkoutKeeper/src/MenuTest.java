@@ -1,4 +1,3 @@
-
 import java.io.FileNotFoundException;
 
 import org.junit.Test;
@@ -10,15 +9,25 @@ import org.junit.Test;
  */
 public class MenuTest {
 
+//	@Test
+//	public void test() {
+//		User user = new User("Abraham", "van Helsing", "ahelsing@email.com", "1234ABcde");
+//		Menu.profileSubMenu(user);
+//	}
+	
+//	@Test
+//	public void testremoveSharedWorkouts() throws FileNotFoundException {
+//		User user = new User("A", "B", "test@email.com", "1");
+//		Object[] fileWorkouts = FileSys.readWorkouts(user).toArray();
+//		
+//		Menu.removeSharedWorkouts(user, "a@e.co", fileWorkouts);
+//	}
+	
 	@Test
-	public void test() {
-		User user = new User("Far", "Bys", "farbys@example.com", "UPPERlower1234");
-		try {
-			Menu.profileSubMenu(user); //profileSubMenu() works, but what about rewriteUserRecord()?
-		}
-		catch(FileNotFoundException e) {
-			e.printStackTrace();
-		}
+	public void testduplicateWorkout() throws FileNotFoundException {
+		User user = new User("A", "B", "test@email.com", "1");
+		Counter counter = new Counter();
+		Menu.createWorkout(user, SortSearch.readExercise(user, counter), true);
 	}
 
 }

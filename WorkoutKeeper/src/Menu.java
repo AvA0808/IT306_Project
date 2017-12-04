@@ -24,7 +24,7 @@ public class Menu {
 	 */
 	public static String welcomeScreen(String status, User user) throws FileNotFoundException, IOException {
 		String[] options = { "Create Account", "Login", "Exit" };
-
+		
 		switch (JOptionPane.showOptionDialog(null, "Welcome to the Workout Keeper App", "Workout Keeper",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 		case 0:
@@ -134,7 +134,7 @@ public class Menu {
 		} while (!accessGranted);
 		return status;
 	}
-	
+
 	/*
 	 * Create user object using input email, which will also be used to read user file to find record with the same email
 	 * @param
@@ -256,6 +256,11 @@ public class Menu {
 		Object[] fileWorkouts = FileSys.readWorkouts(user).toArray();
 		//fileWorkouts = removeSharedWorkouts
 		Object[] fileEmails = FileSys.getAllEmails().toArray();
+	    
+		//Remove this users emails as an option, so the user cannot share a workout with them selves.
+		ArrayList<Object> tempEmails = new ArrayList<Object>(Arrays.asList(fileEmails));
+	    tempEmails.remove(user.getEmail());
+	    fileEmails = tempEmails.toArray();
 		
 		JComboBox<?> emails = new JComboBox<Object>(fileEmails);
 		Object[] getEmail = { "Select the person you want to share a workout with:" ,"User Email:", emails, };
@@ -296,9 +301,11 @@ public class Menu {
 		}
 	}
 
-	private static Object[] removeSharedWorkouts(User user, String shareWithEmail, Object[] fileWorkouts) throws FileNotFoundException {
-		//TODO
-	    Scanner scanner = null; 
+	private static Object[] removeSharedWorkouts(User user, String shareWithEmail, Object[] userWorkouts) throws FileNotFoundException {
+	    Scanner scanner = null;
+	    ArrayList<Object> workoutToRemove = new ArrayList<Object>();
+	    ArrayList<String> tempIDs = new ArrayList<String>();
+		
 	    try {
 	      scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.SHARED_FILE)))); 
 	      //if no exception thrown, proceed to file reading 
@@ -308,7 +315,15 @@ public class Menu {
 	        //grab next record 
 	        nextLine = scanner.nextLine();
 	        if(nextLine.contains(user.getEmail())) {
-	        	//if()
+	        	if(nextLine.contains(shareWithEmail)) {
+	        		String ID = nextLine;
+        			ID = ID.substring(ID.indexOf("Workout ID Shared: "), ID.length());
+    				ID = ID.substring(0, ID.indexOf(","));
+        			ID = ID.substring(ID.indexOf(':') + 1, ID.length());
+        			ID = ID.trim();
+        			
+        			tempIDs.add(ID);
+	        	}
 	        }
 	      }
 	    } 
@@ -316,7 +331,32 @@ public class Menu {
 	      throw e; 
 	    } 
 	    scanner.close();
-		return fileWorkouts;
+	    
+	    Object[] sharedIDs = new Object[tempIDs.size()];
+	    sharedIDs = (Object[]) tempIDs.toArray();
+	    for(int i = 0; i < userWorkouts.length; i++) {
+			String workout = (String) userWorkouts[i];
+			int x = 0;
+			boolean found = false;
+			while(x < sharedIDs.length && !found) {
+				if(workout.contains("Workout ID: " + sharedIDs[x] + ",")) {
+					workoutToRemove.add(userWorkouts[i]);
+					found = true;
+				}
+				x++;
+			}
+	    }
+	    
+	    Object[] tempWorkoutToRemove = new Object[workoutToRemove.size()];
+	    tempWorkoutToRemove = (Object[]) workoutToRemove.toArray();
+	    ArrayList<Object> tempUserWorkouts = new ArrayList<Object>(Arrays.asList(userWorkouts));
+	    for(int i = 0; i < tempWorkoutToRemove.length; i++) {
+	    	if(tempUserWorkouts.contains(tempWorkoutToRemove[i])) {
+	    		tempUserWorkouts.remove(tempWorkoutToRemove[i]);
+	    	}
+	    }
+	    userWorkouts = tempUserWorkouts.toArray();
+		return userWorkouts;
 	}
 
 	private static String findInArray(Object[] list, int selectedIndex, String searchValue) {
@@ -347,16 +387,20 @@ public class Menu {
 				sortExercise(exercises);
 				break;
 			case 2:
-				int duration = 0;
-				do{
-					try{
-						duration = Integer.parseInt(JOptionPane.showInputDialog("Enter the Duration you would like to search for."));
-					}catch (NumberFormatException e) {
-						duration = 0;
-						JOptionPane.showMessageDialog(null, "The Duration cannot be empty");
-					}
-				}while(duration == 0);
-				JOptionPane.showMessageDialog(null, SortSearch.searchDuration(exercises, duration));
+				if(exercises.size() == 0) {
+					JOptionPane.showMessageDialog(null, "You do not have any Exercises.");
+				} else {
+					int duration = 0;
+					do {
+						try{
+							duration = Integer.parseInt(JOptionPane.showInputDialog("Enter the Duration you would like to search for."));
+						}catch (NumberFormatException e) {
+							duration = 0;
+							JOptionPane.showMessageDialog(null, "The Duration cannot be empty");
+						}
+					} while(duration == 0);
+					JOptionPane.showMessageDialog(null, SortSearch.searchDuration(exercises, duration));
+				}
 				break;
 			case 3:
 				exit = true;
@@ -379,7 +423,9 @@ public class Menu {
 			switch (JOptionPane.showOptionDialog(null, "How would you like to sort your Exercises?", "Workout Keeper", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0])) {
 			case 0:
-				if(exercises.size() > 30 ) {
+				if(exercises.size() == 0) {
+					JOptionPane.showMessageDialog(null, "You do not have any Exercises.");
+				} else if(exercises.size() > 30 ) {
 					String longMessage = SortSearch.sortingMethod(exercises, "Type");
 					textArea.setText(longMessage);
 				    textArea.setEditable(false);
@@ -390,8 +436,9 @@ public class Menu {
 				}
 				break;
 			case 1:
-				//TODO Is sorting the entire file, not just the users exercises.
-				if(exercises.size() > 30 ) {
+				if(exercises.size() == 0) {
+					JOptionPane.showMessageDialog(null, "You do not have any Exercises.");
+				} else if(exercises.size() > 30 ) {
 					String longMessage2 = SortSearch.sortingMethod(exercises, "Muscle Group");
 					textArea.setText(longMessage2);
 				    textArea.setEditable(false);
@@ -402,10 +449,14 @@ public class Menu {
 				}
 				break;
 			case 2:
-				exit = true;
+				if(exercises.size() == 0) {
+					JOptionPane.showMessageDialog(null, "You do not have any Exercises.");
+				} else {
+					JOptionPane.showMessageDialog(null, SortSearch.sortDuration(exercises));
+				}
 				break;
 			case 3:
-				//TODO sortByDuration();
+				exit = true;
 				break;
 			default:
 				exit = true;
@@ -515,7 +566,7 @@ public class Menu {
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			
 			if (option == JOptionPane.OK_OPTION) {
-				if(!FileSys.isFoundInList(FileSys.EXERCISE_FILE, "Description: ", description.getText())) {	
+				if(!FileSys.userHasExercise(user.getEmail(), description.getText())) {	
 					if (!description.getText().isEmpty()) {
 						userDesc = description.getText();
 						userMuscle = Exercise.MUSCLE_GROUP[muscle.getSelectedIndex()];
@@ -678,8 +729,10 @@ public class Menu {
 				createWorkout(user, exercises, Validate.canMakeWorkout(counter));
 				break;
 			case 2:
-				if(exercises.size() > 30 ) {
-					String longMessage = getUserWorkouts(user);
+				String longMessage = getUserWorkouts(user);
+				if(longMessage.length() < 60) {
+					JOptionPane.showMessageDialog(null, "You do not have any Workouts.");
+				} else if(exercises.size() > 30 ) {
 					textArea.setText(longMessage);
 				    textArea.setEditable(false);
 				    JScrollPane scrollPane = new JScrollPane(textArea);
@@ -699,7 +752,7 @@ public class Menu {
 		} while (!exit);
 	}
 
-	private static void createWorkout(User user, LinkedList<Exercise> exercises, boolean canMakeWorkout) {
+	private static void createWorkout(User user, LinkedList<Exercise> exercises, boolean canMakeWorkout) throws HeadlessException, FileNotFoundException {
 		if(canMakeWorkout) {
 			int workoutID = Integer.parseInt(FileSys.readLine(FileSys.PATH + FileSys.WORKOUT_ID));
 			
@@ -736,11 +789,33 @@ public class Menu {
 				temp[x++] = it.next();
 			}
 			Workout newWorkout = new Workout(workoutID, temp);
-			addWorkoutToFile(user, newWorkout);
-			JOptionPane.showMessageDialog(null, "The following workout has been saved:\n" + newWorkout.toString() + "\n\n" + newWorkout.printExercises());
+			if(duplicateWorkout(user, newWorkout)) {
+				JOptionPane.showMessageDialog(null, "Duplicate Workouts cannot be created, this workouts already exsists.\nTo make a new workout, it must be unique and have different Exercises from other workouts.");
+			} else {
+				addWorkoutToFile(user, newWorkout);
+				JOptionPane.showMessageDialog(null, "The following workout has been saved:\n" + newWorkout.toString() + "\n\n" + newWorkout.printExercises()); 
+			}
 		} else {
 			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
 		}
+	}
+
+	private static boolean duplicateWorkout(User user, Workout newWorkout) throws FileNotFoundException {
+		Object[] fileWorkouts = FileSys.readWorkouts(user).toArray();
+		ArrayList<Object> tempWorkouts = new ArrayList<Object>(Arrays.asList(fileWorkouts));
+		String exercises = newWorkout.toString();
+		exercises = exercises.substring(16, exercises.length());
+		
+		ListIterator<Object> it = tempWorkouts.listIterator();
+		String temp = "";
+		while(it.hasNext()){
+			temp = it.next().toString();
+			if(temp.contains("Email: " + user.getEmail()) && temp.contains(exercises)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	private static void removeSelection(LinkedList<Exercise> exercise, Exercise picked) {
@@ -834,10 +909,14 @@ public class Menu {
 			while(it.hasNext()) {
 				temp[x++] = it.next();
 			}
+			
 			Workout newWorkout = new Workout(workoutID, temp);
-			addWorkoutToFile(user, newWorkout);
-			JOptionPane.showMessageDialog(null, "The following workout has been saved:\n" + newWorkout.toString() + "\n\n" + newWorkout.printExercises());
-
+			if(duplicateWorkout(user, newWorkout)) {
+				JOptionPane.showMessageDialog(null, "Duplicate Workouts cannot be created, this workouts already exsists.\nTo make a new workout, it must be unique and have different Exercises from other workouts.");
+			} else {
+				addWorkoutToFile(user, newWorkout);
+				JOptionPane.showMessageDialog(null, "The following workout has been saved:\n" + newWorkout.toString() + "\n\n" + newWorkout.printExercises()); 
+			}
 		} else {
 			JOptionPane.showMessageDialog(null, "You do not currently have enough Exercises created inorder to generate a Random Workout.\nYou must return to the Exercise menu to Create new Exercises.");
 		}
@@ -904,8 +983,7 @@ public class Menu {
 										weightHeader = true;
 									}
 								}
-								//userWorkouts += "\nExercise Type: " + FileSys.getSubString(exerciseLine, "Type: ");
-								userWorkouts += "\n\t" + FileSys.getSubString(exerciseLine, "Description: ");
+								userWorkouts += "\n\t" + exerciseLine.substring(exerciseLine.indexOf("ID: "), exerciseLine.length());
 								IDfound = true;
 							}								
 						}

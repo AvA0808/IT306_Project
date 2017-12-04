@@ -136,7 +136,7 @@ public class SortSearch {
 				list_muscle.add(new LinkedList<String>());
 			}
 			//iterate through input linked list, which contains all exercises belonging to the logged-in user
-			Iterator it = list.iterator();
+			Iterator<Exercise> it = list.iterator();
 			while(it.hasNext()) {
 				//grab the next exercise in the list
 				Exercise current = (Exercise)it.next();
@@ -166,7 +166,7 @@ public class SortSearch {
 			for(int x = 0; x < list_muscle.size(); x++) {
 				if(!list_muscle.get(x).isEmpty()) {
 					//for each bucket, iterate through if not empty
-					Iterator it_2 = list_muscle.get(x).iterator();
+					Iterator<?> it_2 = list_muscle.get(x).iterator();
 					while(it_2.hasNext()) {
 						//concatenate each toString to display
 						display += (String)it_2.next() + "\n";
@@ -175,7 +175,8 @@ public class SortSearch {
 				}
 			}
 			
-			/*open the proper file to read the exercises from (more efficient than downcasting from input list)
+/*
+			open the proper file to read the exercises from (more efficient than downcasting from input list)
 			Scanner scanner = null;
 			try {
 				scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.EXERCISE_FILE))));
@@ -220,7 +221,8 @@ public class SortSearch {
 			}
 			catch(FileNotFoundException e) {
 				throw e;
-			}*/
+			}
+*/
 		}
 		//only sorts cardio exercises based on duration
 		else if(howSort.equalsIgnoreCase("Duration")) {
@@ -245,10 +247,13 @@ public class SortSearch {
 		//add each item in the sublist of cardio exercises into the tree, which will sort by duration automatically
 		Iterator<Exercise> it = subList.iterator();
 		while(it.hasNext()) {
-			//safe to downcast
-			Cardiovascular current = (Cardiovascular)it.next();
-			//add item to tree
-			tree.add(current);
+			Object temp = it.next();
+			if(temp instanceof Cardiovascular) {
+				//safe to downcast
+				Cardiovascular current = (Cardiovascular)temp;
+				//add item to tree
+				tree.add(current);
+			}
 		}
 		//turn tree into array so iteration can be done in order
 		Object[] tree_array = tree.toArray();
@@ -258,6 +263,11 @@ public class SortSearch {
 			Cardiovascular curr_cardio = (Cardiovascular)tree_array[i];
 			display += curr_cardio.toString() + "\n";
 		}
+		
+		if(display == "") {
+			display = "YOu do not have any Cardiovascular Exercises to sort.";
+		}
+		
 		return display;
 	}
 	
@@ -286,8 +296,9 @@ public class SortSearch {
 	 * @param
 	 * @return
 	 */
-	public static String searchDuration(LinkedList<Exercise> list, int duration) {
+	public static String searchDuration(LinkedList<Exercise> list, int duration) {		
 		String display = "SEARCH BY DURATION RESULTS\n\n";
+		boolean found = false;
 		//retrieve a sublist of the user's cardiovascular exercises
 		LinkedList<Exercise> subList = returnTypeList(list, "Cardiovascular");
 		Iterator<Exercise> it = subList.iterator();
@@ -297,7 +308,12 @@ public class SortSearch {
 			if(current.getDuration() == duration) {
 				//if match, concatenate its toString() to display String
 				display += current.toString() + "\n";
+				found = true;
 			}
+		}
+		
+		if(!found) {
+			display = "You do not have any Exercises with the Duration of " + duration + " minutes.";
 		}
 		return display;
 	}

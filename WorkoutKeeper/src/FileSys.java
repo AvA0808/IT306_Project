@@ -165,7 +165,7 @@ public class FileSys {
 	    ArrayList<String> list = new ArrayList<String>(); 
 	    Scanner scanner = null; 
 	    try {
-	      scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.WORKOUT_FILE)))); 
+	      scanner = new Scanner(new BufferedReader(new FileReader(new File(PATH + WORKOUT_FILE)))); 
 	      //if no exception thrown, proceed to file reading 
 	      String nextLine = ""; 
 	      //keep iterating while there are more records to read 
@@ -194,7 +194,7 @@ public class FileSys {
 	    ArrayList<String> list = new ArrayList<String>(); 
 	    Scanner scanner = null; 
 	    try {
-	      scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.USER_FILE)))); 
+	      scanner = new Scanner(new BufferedReader(new FileReader(new File(PATH + USER_FILE)))); 
 	      //if no exception thrown, proceed to file reading 
 	      String nextLine = ""; 
 	      //keep iterating while there are more records to read 
@@ -216,7 +216,7 @@ public class FileSys {
 		String list = ""; 
 	    Scanner scanner = null; 
 	    try {
-	      scanner = new Scanner(new BufferedReader(new FileReader(new File(FileSys.PATH + FileSys.SHARED_FILE)))); 
+	      scanner = new Scanner(new BufferedReader(new FileReader(new File(PATH + SHARED_FILE)))); 
 	      //if no exception thrown, proceed to file reading 
 	      String nextLine = ""; 
 	      //keep iterating while there are more records to read 
@@ -239,5 +239,32 @@ public class FileSys {
 	    } 
 	    scanner.close();
 	    return list; 
+	}
+	
+	public static boolean userHasExercise(String userEmail, String description) throws FileNotFoundException {
+	    Scanner scanner = null; 
+	    try {
+	      scanner = new Scanner(new BufferedReader(new FileReader(new File(PATH + EXERCISE_FILE)))); 
+	      //if no exception thrown, proceed to file reading 
+	      String nextLine = ""; 
+	      //keep iterating while there are more records to read 
+	      while(scanner.hasNextLine()) { 
+	        //grab next record 
+	        nextLine = scanner.nextLine();
+	        
+	        if(nextLine.contains(userEmail)) {
+	        	if(nextLine.contains(description)) {
+	        		scanner.close();
+	        		return true;
+	        		
+	        	}
+	        }
+	      }
+	    } 
+	    catch(FileNotFoundException e) { 
+	      throw e; 
+	    } 
+	    scanner.close();
+	    return false; 
 	}
 }
