@@ -1,12 +1,9 @@
 /**
  * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
  * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
- * 
+ * This class represents a common exercise object that can not exist on its own (must be extended by its subclasses).
  */
 public abstract class Exercise {
-	// system-generated ID to track the number of exercises across all users
-	// private static int exerciseID = 0;
-
 	// the exercise's own unique ID
 	private int ID;
 	private String description;
@@ -17,7 +14,7 @@ public abstract class Exercise {
 			"Obliques", "Quadriceps", "Hamstrings", "Calves" };
 	public static final String[] EXERCISE_TYPE = { "Stretch", "Cardiovascular", "WeightTraining" };
 
-	/* constructor assigns the newest ID and increments the exercise counter */
+	/* default constructor */
 	public Exercise() {
 		// this.ID = exerciseID;
 		// exerciseID++;
@@ -30,10 +27,6 @@ public abstract class Exercise {
 		this.muscle = muscle;
 	}
 
-	// public int getExerciseID() {
-	// return exerciseID;
-	// }
-
 	/**
 	 * @return the iD
 	 */
@@ -43,9 +36,7 @@ public abstract class Exercise {
 
 	/**
 	 * For file-reading purposes. Sets the ID that is read from the file.
-	 * 
-	 * @param iD
-	 *            the iD to set
+	 * @param iD the iD to set
 	 */
 	public void setID(int iD) {
 		ID = iD;
@@ -59,8 +50,9 @@ public abstract class Exercise {
 	}
 
 	/**
-	 * @param description
-	 *            the description to set
+	 * Validates and sets the description.
+	 * @param description the description to set
+	 * @return boolean indicating whether the description was succssfully set or not
 	 */
 	public boolean setDescription(String description) {
 		if (description.equals("")) {
@@ -80,9 +72,7 @@ public abstract class Exercise {
 
 	/**
 	 * Validates and sets the muscle according to corresponding index
-	 * 
-	 * @param muscle
-	 *            the muscle to set
+	 * @param muscle the muscle to set
 	 * @return boolean true indicating muscle group successfully set
 	 * @throws IllegalArgumentException
 	 */

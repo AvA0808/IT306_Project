@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 /**
  * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
  * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
- * 
+ * This class contains methods supporting the complete user GUI experience, including display and the more front-end processes.
  */
 public class Menu {
 	/**
@@ -137,9 +137,9 @@ public class Menu {
 
 	/*
 	 * Create user object using input email, which will also be used to read user file to find record with the same email
-	 * @param
-	 * @return
-	 * @throws
+	 * @param user An empty user object to be filled logged-in user's info
+	 * @return The logged-in user's email
+	 * @throws FileNotFoundException
 	 */
 	private static void createUserObject(User user, String email) throws FileNotFoundException {
 		Scanner scanner = null;
@@ -469,7 +469,7 @@ public class Menu {
 	/*
 	 * Displays the profile sub-menu for logged-in user, and processes user selections and inputs to update their profile
 	 * @param user The logged-in user
-	 * @return boolean indicating successful update of user information or not?
+	 * @throws FileNotFoundException
 	 */
 	private static void profileSubMenu(User user) throws FileNotFoundException {
 		//instantiate the text field objects (not allowing new email)
@@ -519,6 +519,7 @@ public class Menu {
 	/*
 	 * Rewrites the logged-in user's record in the user database if there has been a change in their information
 	 * @param user The updated user object (email can not be changed)
+	 * @throws FileNotFoundException
 	 */
 	private static void rewriteUserRecord(User user) throws FileNotFoundException {
 		//meant to hold new file contents that include new record

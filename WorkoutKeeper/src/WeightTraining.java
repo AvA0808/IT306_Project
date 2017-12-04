@@ -1,7 +1,7 @@
 /**
  * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
  * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
- * 
+ * This class represents a weight training type of exercise.
  */
 public class WeightTraining extends Exercise {
 	// the weight required for the exercise equipment in pounds (lbs)
@@ -35,11 +35,9 @@ public class WeightTraining extends Exercise {
 
 	/**
 	 * Validates and sets the weight required for the exercise equipment
-	 * 
 	 * @param weight
 	 *            the weight to set
-	 * @return boolean true indicating that setting weight was successful
-	 * @throws IllegalArgumentException
+	 * @return boolean indicating whether setting weight was successful or not
 	 */
 	public boolean setWeight(int weight){
 		if (weight <= 0) {
@@ -59,11 +57,8 @@ public class WeightTraining extends Exercise {
 
 	/**
 	 * Validates and sets the number of repetitions the weight will be lifted
-	 * 
-	 * @param reps
-	 *            the reps to set
-	 * @return boolean true indicating that setting reps was successful
-	 * @throws IllegalArgumentException
+	 * @param reps the reps to set
+	 * @return boolean indicating whether setting reps was successful or not
 	 */
 	public boolean setReps(int reps) {
 		if (reps <= 0) {
@@ -75,8 +70,8 @@ public class WeightTraining extends Exercise {
 	}
 
 	/*
-	 * Prepares a record of the weight training exercise's information and
-	 * returns it
+	 * Prepares a record of the weight training exercise's information and returns it
+	 * @return String containing the weight training's information
 	 */
 	public String toString() {
 		return ("Type: " + this.getClass().getName() + ", " + super.toString() + "Weight: " + this.weight + ", Reps: "
