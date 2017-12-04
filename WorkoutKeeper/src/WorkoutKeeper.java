@@ -5,11 +5,14 @@ import javax.swing.JOptionPane;
 
 /**
  * @author Aleksandar Atanasov - G00716250 - aatanas2@gmu.edu
- * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu
- * 
+ * @author Victoria Chang - G00947241 - vchang3@masonlive.gmu.edu An app that
+ *         allows users to create and manage accounts, login and manage
+ *         exercises and workouts, and the share workouts
  */
 public class WorkoutKeeper {
 	/**
+	 * A menu that show the user the beginning menus
+	 * 
 	 * @param args
 	 * @throws IOException
 	 * @throws HeadlessException
@@ -17,7 +20,6 @@ public class WorkoutKeeper {
 	public static void main(String[] args) throws HeadlessException, IOException {
 		User user = new User();
 		String status = "rePrompt";
-
 
 		if (FileSys.fileSetup()) {
 			do {

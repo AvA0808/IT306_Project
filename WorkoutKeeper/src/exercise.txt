@@ -66,3 +66,4 @@ Email: test10@email.com, Type: Stretch, ID: 65, Description: Testing, Muscle Gro
 Email: test10@email.com, Type: Cardiovascular, ID: 66, Description: Testing1, Muscle Group: (Top of Shoulders) Deltoids, Duration: 10, Setting: Floor
 Email: test11@email.com, Type: Stretch, ID: 67, Description: Test, Muscle Group: (Top of Shoulders) Deltoids, Instructions: Test
 Email: test11@email.com, Type: Stretch, ID: 68, Description: Testing, Muscle Group: (Top of Shoulders) Deltoids, Instructions: Test
+Email: test@email.com, Type: WeightTraining, ID: 69, Description: Testing23, Muscle Group: (Top of Shoulders) Deltoids, Weight: 30, Reps: 30
